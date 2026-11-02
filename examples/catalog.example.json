@@ -1,0 +1,31 @@
+[
+  {
+    "asin": "DEMO-CUP-500",
+    "title": "日常 500ml 不锈钢保温杯",
+    "category": "杯壶",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "500ml 不锈钢内胆，适合通勤携带。",
+    "attribute": [
+      "保温",
+      "不锈钢",
+      "500ml"
+    ],
+    "pricing": [
+      59.9
+    ],
+    "customization_options": {
+      "颜色": [
+        {
+          "value": "黑色",
+          "is_available": true,
+          "price": 59.9
+        },
+        {
+          "value": "白色",
+          "is_available": true,
+          "price": 59.9
+        }
+      ]
+    }
+  }
+]

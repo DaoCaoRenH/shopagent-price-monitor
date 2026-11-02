@@ -1,0 +1,15 @@
+{
+  "provider": "openai-chat",
+  "model": "your-model-name",
+  "base_url": "https://api.example.com/v1",
+  "api_key_required": true,
+  "api_key_env": "SHOPAGENT_MODEL_API_KEY",
+  "stream": false,
+  "max_context_tokens": 24576,
+  "max_output_tokens": 1024,
+  "timeout_sec": 60,
+  "max_retries": 2,
+  "reasoning_effort": "none",
+  "temperature": 0,
+  "strict_tool_schema": false
+}

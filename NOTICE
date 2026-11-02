@@ -1,0 +1,12 @@
+ShopAgent Price Monitor
+
+This repository contains the price-monitoring application extracted from the
+maintainer's ShopAgent research project. It is an independent application,
+not an official ShopSimulator implementation.
+
+The demo product catalog is fictional and authored for this application.
+No third-party product dataset, model weights, private experiment reports,
+local credentials, user database, or prior Git history is distributed here.
+
+Python dependencies retain their own licenses. Provider names describe API
+compatibility and do not imply affiliation or endorsement.

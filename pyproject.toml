@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shopagent-price-monitor"
+version = "0.1.0"
+description = "Local AI-assisted product discovery, price simulation and historical-low alerts"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{name = "ShopAgent contributors"}]
+keywords = ["agent", "price-monitor", "fastapi", "sqlite", "tool-calling"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "pydantic>=2.7,<3",
+  "jsonschema>=4.23,<5",
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.30,<1",
+]
+
+[project.optional-dependencies]
+dev = ["httpx>=0.27,<1", "build>=1.2,<2", "ruff>=0.9,<1"]
+
+[project.scripts]
+shopagent-monitor = "shopagent_monitor.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+shopagent_monitor = ["resources/*.json"]
+"shopagent_monitor.app" = ["static/*"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E9", "F"]

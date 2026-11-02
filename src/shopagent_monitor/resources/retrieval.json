@@ -1,0 +1,15 @@
+{
+  "schema": "shopagent.catalog-retriever-config/1",
+  "config_id": "r2-fielded-unicode-bm25-v1",
+  "mode": "r2_fielded_bm25",
+  "k1": 1.2,
+  "b": 0.75,
+  "field_weights": {
+    "title": 3.0,
+    "category": 2.5,
+    "attributes": 1.8,
+    "options": 1.4,
+    "description": 0.5
+  },
+  "option_phrase_max_df_ratio": 0.001
+}

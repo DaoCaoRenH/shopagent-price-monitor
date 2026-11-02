@@ -1,0 +1,332 @@
+[
+  {
+    "asin": "DEMO-CUP-500",
+    "title": "日常 500ml 不锈钢保温杯",
+    "category": "杯壶",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "500ml 不锈钢内胆，适合通勤携带。",
+    "attribute": [
+      "保温",
+      "不锈钢",
+      "500ml"
+    ],
+    "pricing": [
+      59.9
+    ],
+    "customization_options": {
+      "颜色": [
+        {
+          "value": "黑色",
+          "is_available": true,
+          "price": 59.9
+        },
+        {
+          "value": "白色",
+          "is_available": true,
+          "price": 59.9
+        }
+      ]
+    }
+  },
+  {
+    "asin": "DEMO-CUP-350",
+    "title": "轻便 350ml 不锈钢保温杯",
+    "category": "杯壶",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "350ml 小容量保温杯，适合短途出行。",
+    "attribute": [
+      "保温",
+      "不锈钢",
+      "350ml"
+    ],
+    "pricing": [
+      45
+    ],
+    "customization_options": {
+      "颜色": [
+        {
+          "value": "蓝色",
+          "is_available": true,
+          "price": 45
+        },
+        {
+          "value": "白色",
+          "is_available": true,
+          "price": 45
+        }
+      ]
+    }
+  },
+  {
+    "asin": "DEMO-BOTTLE-1000",
+    "title": "户外 1000ml 保温水壶",
+    "category": "杯壶",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "大容量保温水壶，适合户外休闲。",
+    "attribute": [
+      "保温",
+      "1000ml"
+    ],
+    "pricing": [
+      89
+    ],
+    "customization_options": {}
+  },
+  {
+    "asin": "DEMO-HEADPHONE-ANC",
+    "title": "通勤无线降噪耳机",
+    "category": "数码",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "蓝牙无线耳机，支持主动降噪。虚构演示型号。",
+    "attribute": [
+      "无线",
+      "降噪",
+      "蓝牙"
+    ],
+    "pricing": [
+      129
+    ],
+    "customization_options": {
+      "颜色": [
+        {
+          "value": "黑色",
+          "is_available": true,
+          "price": 129
+        },
+        {
+          "value": "白色",
+          "is_available": true,
+          "price": 129
+        }
+      ]
+    }
+  },
+  {
+    "asin": "DEMO-HEADPHONE-LIGHT",
+    "title": "轻巧无线蓝牙耳机",
+    "category": "数码",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "轻巧便携款，不提供主动降噪。",
+    "attribute": [
+      "无线",
+      "蓝牙",
+      "轻便"
+    ],
+    "pricing": [
+      79
+    ],
+    "customization_options": {
+      "颜色": [
+        {
+          "value": "黑色",
+          "is_available": true,
+          "price": 79
+        },
+        {
+          "value": "粉色",
+          "is_available": true,
+          "price": 79
+        }
+      ]
+    }
+  },
+  {
+    "asin": "DEMO-KEYBOARD",
+    "title": "桌面无线键盘",
+    "category": "数码",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "紧凑布局无线键盘，适用于日常办公。",
+    "attribute": [
+      "无线",
+      "办公"
+    ],
+    "pricing": [
+      159
+    ],
+    "customization_options": {
+      "颜色": [
+        {
+          "value": "灰色",
+          "is_available": true,
+          "price": 159
+        },
+        {
+          "value": "白色",
+          "is_available": true,
+          "price": 159
+        }
+      ]
+    }
+  },
+  {
+    "asin": "DEMO-SHOES-MESH",
+    "title": "轻量透气跑步鞋",
+    "category": "运动",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "网面鞋面，缓震鞋底，日常慢跑使用。",
+    "attribute": [
+      "透气",
+      "跑步",
+      "缓震"
+    ],
+    "pricing": [
+      199
+    ],
+    "customization_options": {
+      "尺码": [
+        {
+          "value": "39",
+          "is_available": true,
+          "price": 199
+        },
+        {
+          "value": "40",
+          "is_available": true,
+          "price": 199
+        },
+        {
+          "value": "41",
+          "is_available": true,
+          "price": 199
+        },
+        {
+          "value": "42",
+          "is_available": true,
+          "price": 199
+        },
+        {
+          "value": "43",
+          "is_available": true,
+          "price": 199
+        }
+      ]
+    }
+  },
+  {
+    "asin": "DEMO-SHOES-WALK",
+    "title": "舒适休闲步行鞋",
+    "category": "运动",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "日常通勤步行鞋，非专业跑鞋。",
+    "attribute": [
+      "舒适",
+      "步行"
+    ],
+    "pricing": [
+      139
+    ],
+    "customization_options": {
+      "尺码": [
+        {
+          "value": "39",
+          "is_available": true,
+          "price": 139
+        },
+        {
+          "value": "40",
+          "is_available": true,
+          "price": 139
+        },
+        {
+          "value": "41",
+          "is_available": true,
+          "price": 139
+        },
+        {
+          "value": "42",
+          "is_available": true,
+          "price": 139
+        }
+      ]
+    }
+  },
+  {
+    "asin": "DEMO-MAT",
+    "title": "防滑瑜伽垫 6mm",
+    "category": "运动",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "适用于室内伸展练习，厚度 6mm。",
+    "attribute": [
+      "防滑",
+      "瑜伽",
+      "6mm"
+    ],
+    "pricing": [
+      69
+    ],
+    "customization_options": {
+      "颜色": [
+        {
+          "value": "绿色",
+          "is_available": true,
+          "price": 69
+        },
+        {
+          "value": "紫色",
+          "is_available": true,
+          "price": 69
+        }
+      ]
+    }
+  },
+  {
+    "asin": "DEMO-LAMP",
+    "title": "桌面阅读台灯",
+    "category": "家居",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "可调亮度的桌面阅读灯。",
+    "attribute": [
+      "阅读",
+      "可调亮度"
+    ],
+    "pricing": [
+      99
+    ],
+    "customization_options": {}
+  },
+  {
+    "asin": "DEMO-BAG",
+    "title": "日常通勤双肩背包",
+    "category": "箱包",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "简洁通勤背包，内含电脑隔层。",
+    "attribute": [
+      "通勤",
+      "双肩",
+      "电脑隔层"
+    ],
+    "pricing": [
+      169
+    ],
+    "customization_options": {
+      "颜色": [
+        {
+          "value": "黑色",
+          "is_available": true,
+          "price": 169
+        },
+        {
+          "value": "灰色",
+          "is_available": true,
+          "price": 169
+        }
+      ]
+    }
+  },
+  {
+    "asin": "DEMO-MUG",
+    "title": "陶瓷办公马克杯 400ml",
+    "category": "杯壶",
+    "shop_name": "ShopAgent 虚构演示店",
+    "full_description": "400ml 陶瓷马克杯，无保温结构。",
+    "attribute": [
+      "陶瓷",
+      "马克杯",
+      "400ml"
+    ],
+    "pricing": [
+      29.9
+    ],
+    "customization_options": {}
+  }
+]

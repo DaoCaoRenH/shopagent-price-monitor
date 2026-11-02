@@ -1,0 +1,38 @@
+# Local application data and credentials
+.shopagent/
+secrets/
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite3
+*.db
+*.db-*
+*.sqlite*-*
+*.pem
+*.key
+*.p12
+*.pfx
+*.log
+*.pid
+
+# Local development and build output
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Private catalogs, user snapshots and generated files
+/local-data/
+/artifacts/

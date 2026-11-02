@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m unittest discover -s tests -v
+      - run: python -m ruff check src tests tools
+      - run: node --check src/shopagent_monitor/app/static/app.js
+      - run: python tools/check_release.py
+      - run: python -m build
+      - name: Install wheel
+        run: python -c "import glob,subprocess,sys; subprocess.check_call([sys.executable,'-m','pip','install','--force-reinstall','--no-deps',glob.glob('dist/*.whl')[0]])"
+      - run: python tools/verify_install.py
