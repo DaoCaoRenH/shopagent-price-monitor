@@ -1,9 +1,12 @@
 include README.md LICENSE NOTICE CONTRIBUTING.md SECURITY.md AGENTS.md CHANGELOG.md
 include run_price_monitor.py
+include frontend/package.json frontend/package-lock.json frontend/tsconfig.json frontend/vite.config.ts frontend/index.html frontend/.prettierrc.json
+recursive-include frontend/src *.ts *.vue *.css
+recursive-include frontend/tests *.ts
 recursive-include docs *.md *.png
 recursive-include examples *.json
 recursive-include tools *.py
 recursive-include tests *.py
 recursive-include src/shopagent_monitor/resources *.json
-recursive-include src/shopagent_monitor/app/static *.html *.css *.js
+recursive-include src/shopagent_monitor/app/static *.html *.css *.js *.md
 global-exclude *.py[cod]

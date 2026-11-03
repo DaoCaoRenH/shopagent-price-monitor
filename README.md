@@ -2,7 +2,7 @@
 
 用自然语言寻找商品，确认规格后跟踪价格，在采集到新低价时提醒，并根据已有记录生成购买建议。
 
-基于 **FastAPI + SQLite + 原生 HTML/CSS/JavaScript**，无需前端构建。支持 OpenAI Responses、兼容的 Chat Completions 和 Gemini 原生工具调用，也可以完全使用目录检索与规则建议。
+基于 **Vue 3 + TypeScript + FastAPI + SQLite**。安装包包含编译后的页面，运行时只需 Python。支持 OpenAI Responses、兼容的 Chat Completions 和 Gemini 原生工具调用，也可以完全使用目录检索与规则建议。
 
 ![价格监控工作台](docs/images/overview.png)
 
@@ -91,12 +91,20 @@ python3 -m venv .venv
 
 ```text
 src/shopagent_monitor/
-  app/                 # API、Agent、监控、模拟、SQLite 及静态前端
+  app/                 # API、Agent、监控、模拟、SQLite 及编译后的静态页面
   llm/                 # 配置、消息、三种协议、SSE 与上下文预算
   resources/           # 虚构演示目录和固定检索配置
   catalog_retrieval.py # 确定性的字段加权 Unicode BM25
   data.py              # 公开商品字段加载
   cli.py               # 命令行入口
+frontend/
+  src/views/           # 页面组合与路由入口
+  src/components/      # 商品、进度、曲线、建议、设置与通用组件
+  src/composables/     # 搜索、规格报价、监控、历史、设置和导入流程
+  src/api/             # HTTP、NDJSON 与类型化业务接口
+  src/lib/             # 格式化、请求隔离和价格曲线坐标
+  src/types/           # 前后端数据契约
+  tests/               # 流式响应、请求竞态、建议有效性等测试
 examples/              # 无凭据的模型配置和目录示例
 tests/                 # 独立、无需外部模型的应用测试
 docs/                  # 架构、数据、模型配置与截图
@@ -108,12 +116,18 @@ API 文档在运行后的 `/docs`。流程与接口见 [架构说明](docs/archi
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+Set-Location frontend
+npm ci
+npm test
+npm run build
+Set-Location ..
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 .\.venv\Scripts\python.exe -m ruff check src tests tools
-node --check src/shopagent_monitor/app/static/app.js
 ```
 
-Node 只用于可选的 JavaScript 语法检查。CI 在 Windows / Ubuntu、Python 3.11 / 3.12 上执行单测和打包验证；测试使用临时数据库、虚构商品和受控模型响应。贡献约定见 [CONTRIBUTING.md](CONTRIBUTING.md)，运行边界见 [SECURITY.md](SECURITY.md)。
+修改前端源码需要 Node 22.12+ 或 24+；普通用户运行安装包无需 Node。`npm run dev` 启动前端开发服务器，默认将 `/api` 代理到 `127.0.0.1:8092`，请在另一个终端用 `--port 8092` 启动 Python 后端。正式运行由 FastAPI 同源提供页面与接口。
+
+`npm run build` 会重建 `src/shopagent_monitor/app/static/`，生成文件随源码提交并进入 wheel。不要直接编辑生成文件；代码分层与异步状态约定见 [前端开发说明](docs/frontend-refactor.md)。CI 在 Windows / Ubuntu、Python 3.11 / 3.12 上执行前后端测试、构建一致性和安装包验证；测试使用临时数据库、虚构商品和受控模型响应。贡献约定见 [CONTRIBUTING.md](CONTRIBUTING.md)，运行边界见 [SECURITY.md](SECURITY.md)。
 
 准备发布前可运行 `python tools/check_release.py` 检查已加入 Git 的文件，以及 `python -m build` 构建安装包。安装 wheel 后执行 `python tools/verify_install.py`，确认网页和演示数据随包分发。版本与验证记录见 [CHANGELOG.md](CHANGELOG.md)。
 

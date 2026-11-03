@@ -12,6 +12,7 @@ PROBE = r"""
 from datetime import datetime, timezone
 from pathlib import Path
 import json
+import re
 import shopagent_monitor
 from shopagent_monitor.paths import DEFAULT_DATASET_PATH
 from shopagent_monitor.app.web import create_app
@@ -24,7 +25,11 @@ with TestClient(create_app(db_path=db, scheduler_enabled=False)) as client:
     status = client.get("/api/status").json()
     assert status["catalog_count"] == 12 and status["catalog_is_demo"]
     assert not status["model_enabled"]
-    for resource in ("/", "/static/app.js", "/static/style.css", "/docs"):
+    html = client.get("/").text
+    assets = re.findall(r'(?:src|href)="(/static/assets/[^\"]+)"', html)
+    assert any(path.endswith(".js") for path in assets), "compiled JavaScript is missing"
+    assert any(path.endswith(".css") for path in assets), "compiled CSS is missing"
+    for resource in ("/", *assets, "/static/third-party-licenses.md", "/docs"):
         assert client.get(resource).status_code == 200, resource
     result = client.post("/api/search", json={"description":"不锈钢保温杯"}).json()
     assert result["products"] and result["search_id"]

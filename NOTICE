@@ -23,3 +23,8 @@ test data and do not represent live market prices or trends.
 
 Python dependencies retain their own licenses. Provider names describe API
 compatibility and do not imply affiliation or endorsement.
+
+The bundled browser application uses Vue and Vue Router. Copyright and
+license texts for the bundled frontend dependencies are generated at build
+time in shopagent_monitor/app/static/third-party-licenses.md and distributed
+with the Python package. Frontend build tools retain their own licenses.

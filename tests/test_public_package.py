@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -67,9 +68,13 @@ class PublicPackageTests(unittest.TestCase):
                 self.assertTrue(status["catalog_is_demo"])
                 self.assertFalse(status["model_enabled"])
                 self.assertEqual(status["catalog_count"], 12)
-                for path in ("/", "/static/app.js", "/static/style.css"):
+                html = client.get("/").text
+                assets = re.findall(r'(?:src|href)="(/static/assets/[^\"]+)"', html)
+                self.assertTrue(any(path.endswith(".js") for path in assets))
+                self.assertTrue(any(path.endswith(".css") for path in assets))
+                for path in ("/", *assets):
                     self.assertEqual(client.get(path).status_code, 200)
-                self.assertIn("演示目录", client.get("/").text)
+                self.assertIn('id="app"', html)
                 result = client.post("/api/search", json={"description": "保温杯"}).json()
                 self.assertTrue(result["products"])
                 self.assertEqual(result["engine"], "catalog")

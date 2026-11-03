@@ -36,3 +36,8 @@ Thumbs.db
 # Private catalogs, user snapshots and generated files
 /local-data/
 /artifacts/
+
+# Frontend dependencies and local tooling
+node_modules/
+*.tsbuildinfo
+/frontend/coverage/

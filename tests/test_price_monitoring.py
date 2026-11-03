@@ -472,7 +472,7 @@ class PriceMonitorWebTests(MonitorFixture):
         app = create_app(service=self.service, model_config=None, scheduler_enabled=False)
         with TestClient(app) as client:
             self.assertEqual(client.get("/").status_code, 200)
-            self.assertEqual(client.get("/static/app.js").status_code, 200)
+            self.assertIn('type="module"', client.get("/").text)
             self.assertEqual(client.get("/api/status").json()["catalog_count"], 2)
             results = client.post("/api/search", json={"description": "降噪耳机"}).json()
             self.assertEqual(results["products"][0]["asin"], "A")

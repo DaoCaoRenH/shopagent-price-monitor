@@ -1,165 +1,19 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="color-scheme" content="light">
-  <title>ShopAgent · 价格监控</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%231b6351'/%3E%3Cpath d='M9 13h5l4 14h12l3-10H16M20 10v10m-4-4 4 4 4-4' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="/static/style.css?v=0.1.0">
-  <script src="/static/app.js?v=0.1.0" defer></script>
-</head>
-<body>
-  <a class="skip-link" href="#main">跳到主要内容</a>
-  <aside class="sidebar">
-    <a class="brand" href="/" aria-label="ShopAgent 首页"><span class="brand-mark" data-icon="bag"></span><span>ShopAgent<small>你的价格观察员</small></span></a>
-    <div class="nav-label">我的工作台</div>
-    <nav aria-label="主导航">
-      <button class="nav-item active" data-tab="monitor" aria-current="page"><span data-icon="activity"></span>价格监控</button>
-      <button class="nav-item" data-tab="watches"><span data-icon="chart"></span>我的监控</button>
-      <button class="nav-item" data-tab="history"><span data-icon="history"></span>搜索记录</button>
-      <button class="nav-item" data-tab="alerts"><span data-icon="bell"></span>低价提醒<span id="nav-unread" class="nav-count" hidden>0</span></button>
-      <button class="nav-item" data-tab="data"><span data-icon="database"></span>数据管理</button>
-      <button class="nav-item" data-tab="settings"><span data-icon="settings"></span>模型配置</button>
-    </nav>
-    <div class="sidebar-foot"><span class="dot"></span> 本机工作空间<small>价格变化，留一份记录。</small></div>
-  </aside>
-  <div class="workspace">
-    <header class="topbar"><div class="breadcrumb">工作台 <span>/</span> <strong id="breadcrumb-current">价格监控</strong></div><div class="topbar-right"><span id="connection" class="connection">正在连接…</span><button class="button primary compact" id="new-watch"><span data-icon="plus"></span>新建监控</button></div></header>
-    <main id="main">
-      <div id="global-error" class="notice error" role="alert" hidden></div>
-      <div id="catalog-demo-note" class="notice" role="note" hidden>演示目录：商品和报价均为虚构内容，用于体验搜索、模拟监控和低价提醒。</div>
-      <section class="page-heading"><div><div class="eyebrow">SHOPPING, AT YOUR PACE</div><h1 id="page-title">商品价格监控</h1><p id="page-subtitle">关注想买的商品，等一个更合适的价格。</p></div><div class="heading-date" id="today"></div></section>
-      <section class="metrics" aria-label="监控概况">
-        <div><span>监控商品</span><strong id="metric-watches">—</strong><small>个商品规格</small></div>
-        <div><span>正在监控</span><strong id="metric-active">—</strong><small>自动定时检查</small></div>
-        <div><span>价格采样</span><strong id="metric-samples">—</strong><small>条已保存记录</small></div>
-        <div class="metric-alert"><span>未读低价提醒</span><strong id="metric-alerts">—</strong><small>低于此前采集最低价</small></div>
-      </section>
-
-      <section id="view-monitor" class="view">
-        <section class="search-panel" aria-labelledby="search-title"><div class="section-title"><div class="title-with-icon"><span class="accent-icon" data-icon="spark"></span><h2 id="search-title">想关注什么商品？</h2></div><span class="quiet-label">描述需求，搜索后确认规格</span></div>
-          <form id="search-form"><label class="sr-only" for="description">需要监控的商品描述</label><div class="search-input-wrap"><textarea id="description" rows="2" maxlength="500" placeholder="例如：想关注一款无线降噪耳机，黑色，日常通勤使用" required></textarea><button class="button primary" id="search-button" type="submit"><span data-icon="search"></span>搜索商品</button></div></form>
-          <div class="search-examples"><span>试试搜索</span><button data-query="无线降噪耳机 黑色">无线降噪耳机</button><button data-query="跑步运动鞋 透气">透气跑步鞋</button><button data-query="保温杯 不锈钢">不锈钢保温杯</button></div>
-          <section id="search-progress" class="search-progress" data-state="running" aria-label="搜索执行进度" aria-busy="false" hidden>
-            <div class="search-progress-heading"><strong id="search-progress-title">正在准备搜索</strong><span id="search-progress-elapsed">已用时 0 秒</span></div>
-            <p id="search-progress-message" role="status" aria-live="polite">正在提交搜索请求…</p>
-            <div id="search-progress-bar" class="search-progress-track" role="progressbar" aria-label="搜索执行进度" aria-valuemin="0" aria-valuemax="100" aria-describedby="search-progress-message"><span></span></div>
-            <div class="search-progress-meta"><span id="search-progress-stats">等待执行</span><span id="search-progress-engine">连接中</span></div>
-            <details class="search-progress-details" open><summary>执行记录 <span id="search-progress-count">0 步</span></summary><ol id="search-progress-log" aria-label="搜索执行记录"></ol></details>
-          </section>
-          <div id="search-feedback" class="notice" role="status" hidden></div>
-          <div id="search-results" hidden><div class="results-heading"><h3>候选商品 <span id="result-count"></span></h3><div class="results-actions"><button class="text-button" id="last-search-record" hidden>查看本次记录 ↗</button><button class="text-button" id="close-results">收起结果</button></div></div><div id="product-list"></div></div>
-        </section>
-
-        <section class="panel monitor-entry"><span class="monitor-entry-icon" data-icon="chart"></span><div><h2>我的监控 <span id="monitor-watch-count" class="count">0</span></h2><p id="monitor-watch-summary">集中查看关注商品的价格变化与采样记录。</p></div><button class="button secondary" data-open-tab="watches">查看我的监控 <span data-icon="arrowRight"></span></button></section>
-        <section class="panel recent-alerts"><div class="panel-heading"><h2><span class="inline-icon" data-icon="bell"></span>最近低价提醒</h2><button class="text-button" data-open-tab="alerts">查看全部 <span aria-hidden="true">↗</span></button></div><div id="recent-alert-list"></div></section>
-      </section>
-
-      <section id="view-watches" class="view" hidden>
-        <section class="panel watch-panel"><div class="panel-heading"><h2>监控商品 <span id="watch-count" class="count">0</span></h2><label class="filter-label"><span class="sr-only">筛选监控状态</span><select id="watch-filter"><option value="all">全部状态</option><option value="active">正在监控</option><option value="paused">已暂停</option><option value="simulation">模拟监控</option></select></label></div><div id="watch-list" aria-live="polite"><div class="empty-state"><span class="empty-icon" data-icon="bag"></span><h3>正在加载监控…</h3></div></div></section>
-      </section>
-
-      <section id="view-watch-detail" class="view" hidden>
-        <div class="watch-detail-toolbar"><a class="button secondary" href="#watches"><span data-icon="arrowLeft"></span>返回我的监控</a><span class="quiet-label">每个商品规格单独记录价格</span></div>
-        <section class="panel detail-panel" id="detail-panel" aria-label="所选商品价格详情"><p class="history-placeholder" role="status">正在读取价格走势…</p></section>
-      </section>
-
-      <section id="view-history" class="view" hidden>
-        <div class="history-grid">
-          <section class="panel history-list-panel" aria-labelledby="history-list-title">
-            <div class="panel-heading"><h2 id="history-list-title">过往搜索 <span id="search-history-total" class="count">0</span></h2><button class="text-button" id="refresh-search-history">刷新</button></div>
-            <form id="history-filter-form" class="history-filter"><label class="sr-only" for="history-filter">按历史需求查找</label><input id="history-filter" maxlength="500" placeholder="按历史需求查找"><button class="icon-button" type="submit" aria-label="查找搜索记录"><span data-icon="search"></span></button></form>
-            <div id="search-history-feedback" class="notice error" role="alert" hidden></div>
-            <div id="search-history-list" aria-label="搜索记录列表"><p class="history-placeholder">正在读取搜索记录…</p></div>
-            <div class="history-pagination"><button class="button secondary" id="more-search-history" hidden>加载更早记录</button></div>
-          </section>
-          <section class="panel history-detail-panel" id="search-history-detail" aria-label="当次搜索的候选商品"><div class="empty-state"><span class="empty-icon" data-icon="history"></span><h3>留住每一次比较</h3><p>选择一条搜索记录，查看当时的候选商品和筛选理由，<br>继续确认商品并加入监控。</p></div></section>
-        </div>
-      </section>
-
-      <section id="view-alerts" class="view" hidden><section class="panel"><div class="panel-heading"><h2>提醒记录</h2><span class="quiet-label">首次采样与相同最低价不会触发提醒</span></div><div id="alert-list"></div></section></section>
-
-      <section id="view-data" class="view" hidden><div class="data-grid"><section class="panel import-panel"><div class="panel-heading"><h2>导入价格快照</h2><span class="tag">JSON</span></div><div class="panel-body"><p class="body-copy">为已监控的商品导入所选规格报价。记录观测时间，更新价格历史；出现新的最低价时自动提醒。</p><label class="field-label" for="import-json">报价数据</label><textarea id="import-json" class="code-input" rows="14" spellcheck="false" placeholder='{"observations": [{"watch_id": "监控 ID", "price": "89.90", "observed_at": "含时区的观测时间"}]}'></textarea><div class="import-toolbar"><label class="button secondary file-button"><input type="file" id="import-file" accept=".json,application/json"><span data-icon="upload"></span>选择文件</label><button class="text-button" id="import-example">填入所选商品示例</button><button class="button primary" id="import-submit">导入快照</button></div><div id="import-feedback" class="notice" role="status" hidden></div></div></section><section class="panel data-notes"><div class="panel-heading"><h2>数据来源与更新</h2></div><div class="panel-body"><div class="source-block"><span class="source-number">01</span><h3>商品目录</h3><p>ShopSimulator 公开商品目录</p><strong id="catalog-count">— 个商品</strong></div><div class="source-block"><span class="source-number">02</span><h3>快照监控</h3><p>以目录报价建立初始基准，后续导入有明确时间的价格快照。静态目录不会自行产生新价格。</p></div><div class="source-block"><span class="source-number">03</span><h3>模拟监控</h3><p>用于体验价格变化和低价提醒。模拟报价单独保存，不会进入快照监控的价格历史。</p></div><div class="scope-note">“历史最低”仅指开始采集以来的记录，不代表电商平台全站历史最低价。</div><p id="scheduler-detail" class="quiet-label"></p></div></section></div></section>
-      <section id="view-settings" class="view" hidden>
-        <div class="settings-grid">
-          <section class="panel settings-panel" aria-labelledby="model-settings-title">
-            <div class="panel-heading"><h2 id="model-settings-title">Agent 模型</h2><span id="model-draft-state" class="quiet-label">正在读取配置…</span></div>
-            <form id="model-settings-form" class="panel-body" autocomplete="off">
-              <fieldset id="model-fields" disabled>
-                <label class="settings-toggle"><input type="checkbox" id="model-enabled">启用模型分析<span class="quiet-label">用于商品搜索和购买建议</span></label>
-                <div class="settings-fields">
-                  <label class="field-label" for="model-provider">接口协议<select id="model-provider"><option value="openai-responses">OpenAI Responses</option><option value="openai-chat">OpenAI Chat Completions</option><option value="gemini">Gemini 原生接口</option></select></label>
-                  <label class="field-label" for="model-name">模型名称<input id="model-name" required maxlength="200" placeholder="MiniCPM5-2B" spellcheck="false"></label>
-                  <label class="field-label settings-wide" for="model-url">服务地址<input id="model-url" type="url" required maxlength="500" placeholder="http://127.0.0.1:8080/v1" spellcheck="false"><small id="model-url-help" class="field-help">填写根地址，包含 /v1；无需填写 /responses。</small></label>
-                  <label class="settings-toggle settings-wide"><input type="checkbox" id="model-auth">服务需要 API Key</label>
-                  <label class="field-label settings-wide" for="model-key">API Key<input id="model-key" type="password" maxlength="4096" autocomplete="new-password" placeholder="不需要认证时可留空"><small id="model-key-help" class="field-help">密钥只保存在本机，不会回传到页面。</small></label>
-                  <label class="settings-toggle settings-wide" id="model-clear-wrap" hidden><input type="checkbox" id="model-clear-key">清除已保存的 API Key</label>
-                </div>
-                <details class="settings-advanced"><summary>高级参数</summary><div class="settings-fields">
-                  <label class="field-label" for="model-reasoning">思考强度<select id="model-reasoning" aria-describedby="model-reasoning-help"><option value="none">默认（不额外启用）</option><option value="minimal">极低（minimal）</option><option value="low">低（low）</option><option value="medium">中（medium）</option><option value="high">高（high）</option><option value="xhigh">极高（xhigh）</option><option value="max">最大（max）</option><option value="ultra">扩展（ultra）</option></select><small id="model-reasoning-help" class="field-help">具体可用档位取决于模型服务。</small></label>
-                  <label class="field-label" for="model-context">上下文长度（Token）<input id="model-context" type="number" min="2048" max="2097152" step="1" value="24576" required aria-describedby="model-context-help"><small id="model-context-help" class="field-help">默认 24K（24,576）。包含输入与输出预留，请与服务端实际窗口保持一致。</small></label>
-                  <label class="field-label" for="model-timeout">单次请求超时（秒）<input id="model-timeout" type="number" min="1" max="120" step="1" required></label>
-                  <label class="field-label" for="model-retries">失败后自动重试次数<input id="model-retries" type="number" min="0" max="5" step="1" value="2" required><small class="field-help">默认 2 次；仅重试当前轮，保留已有搜索与查看结果。</small></label>
-                  <label class="field-label" for="model-output">最大输出 Token<input id="model-output" type="number" min="128" max="4096" step="1" required></label>
-                  <label class="field-label" for="model-temperature">Temperature<input id="model-temperature" type="number" min="0" max="2" step="0.1" required></label>
-                  <label class="settings-toggle"><input type="checkbox" id="model-strict">严格工具 Schema（Responses）</label>
-                  <label class="settings-toggle settings-wide"><input type="checkbox" id="model-stream" checked>流式接收模型响应（Responses）</label>
-                  <small id="model-stream-help" class="field-help settings-wide">实时检测生成和工具参数；完整接收并校验后才执行工具。</small>
-                </div><p class="field-help">超时按每次无数据等待计算；临时网络错误、限流和服务端故障按以上次数自动重试。搜索中的无效工具调用另有最多 2 次协议补正。上下文按客户端预算检查；购买建议每次输出最多 512 Token。</p></details>
-                <section class="settings-budget" aria-labelledby="search-budget-title">
-                  <h3 id="search-budget-title">搜索执行预算</h3>
-                  <p class="field-help">每次商品搜索独立计数，保存后用于新发起的搜索。</p>
-                  <div class="settings-fields search-budget-fields">
-                    <label class="field-label" for="search-max-searches">最多搜索次数<input id="search-max-searches" type="number" min="1" max="20" step="1" value="2" required><small class="field-help">1–20 次，默认 2 次</small></label>
-                    <label class="field-label" for="search-max-inspections">最多查看商品次数<input id="search-max-inspections" type="number" min="0" max="30" step="1" value="3" required><small class="field-help">0–30 次，默认 3 次</small></label>
-                    <label class="field-label" for="search-max-rounds">最多模型调用轮次<input id="search-max-rounds" type="number" min="2" max="50" step="1" value="7" required><small class="field-help">2–50 轮，默认 7 轮</small></label>
-                  </div>
-                  <p class="field-help budget-explanation">每轮模型选择一个操作，被阻断的尝试和最终返回候选也占一轮。无效工具调用每次搜索最多补正 2 次，并计入总轮次；保留已有搜索与详情。补正或轮次用尽仍未完成时保留已有候选，暂无候选时才回退目录检索。提高上限可能增加耗时。</p>
-                </section>
-                <div class="settings-actions"><button type="button" class="button secondary" id="model-test">测试连接</button><button type="submit" class="button primary" id="model-save">保存并生效</button><button type="button" class="text-button" id="model-reset">撤销修改</button></div>
-              </fieldset>
-              <div id="model-feedback" class="notice" role="status" hidden></div>
-              <button type="button" class="text-button" id="model-retry" hidden>重新读取配置</button>
-            </form>
-          </section>
-          <aside class="panel settings-summary"><div class="panel-heading"><h2>当前生效配置</h2></div><div class="panel-body"><div id="model-current" aria-live="polite">正在读取…</div><div class="scope-note">保存后，新发起的搜索与购买建议使用此配置。关闭模型后，商品使用目录检索，购买建议使用监控规则。</div><p class="field-help">测试连接会发起一次工具调用请求，使用当前填写的设置，不会保存配置。</p></div></aside>
-        </div>
-      </section>
-      <footer class="page-footer"><span>ShopAgent / Price Monitor</span><span>历史最低价依据已采集记录 · 人民币 CNY</span></footer>
-    </main>
-  </div>
-
-  <dialog id="product-dialog" class="product-dialog" aria-labelledby="dialog-title">
-    <form id="watch-form">
-      <div class="dialog-heading"><div><div class="eyebrow">PRODUCT & PRICE WATCH</div><h2 id="dialog-title">商品详情</h2></div><button class="icon-button" type="button" id="close-dialog" aria-label="关闭"><span data-icon="close"></span></button></div>
-      <div id="dialog-product" aria-busy="false"></div>
-      <section id="watch-settings" aria-label="监控设置" hidden>
-      <h3 class="watch-settings-title">确认规格与价格来源</h3><p id="option-help" class="field-help"></p>
-      <div id="option-fields"></div>
-      <div class="form-columns">
-        <label class="field-label" for="watch-mode">价格来源<select id="watch-mode"><option value="snapshot">快照监控</option><option value="simulation">模拟监控</option></select></label>
-        <label class="field-label" for="watch-interval">检查间隔<select id="watch-interval"><option value="3600">每 1 小时</option><option value="900">每 15 分钟</option><option value="60">每 1 分钟</option><option value="30">每 30 秒</option><option value="21600">每 6 小时</option></select></label>
-      </div>
-      <p id="mode-help" class="field-help">定期检查最新已导入快照；静态目录本身不会产生价格变化。</p>
-      <fieldset id="simulation-settings" class="simulation-settings" hidden>
-        <legend>模拟价格如何变化</legend>
-        <label class="field-label" for="simulation-engine">模拟方式<select id="simulation-engine"><option value="event">事件驱动：同价、调价与促销</option><option value="replay">固定场景回放</option></select></label>
-        <div class="form-columns">
-          <label class="field-label" id="seed-field" for="simulation-seed">随机种子<input id="simulation-seed" type="number" min="0" max="2147483647" step="1" value="42"></label>
-          <label class="field-label" for="simulation-period">价格推进间隔<select id="simulation-period"><option value="30">每 30 秒一步</option><option value="60">每 1 分钟一步</option><option value="300">每 5 分钟一步</option></select></label>
-        </div>
-        <label class="field-label" id="scenario-field" for="simulation-scenario" hidden>回放场景<select id="simulation-scenario"></select></label>
-        <p id="simulation-help" class="field-help"></p>
-        <div id="scenario-preview" class="scenario-preview" hidden></div>
-      </fieldset>
-      <div id="quote-preview" class="quote-preview" aria-live="polite">请选择完整规格</div>
-      </section>
-      <div id="dialog-error" class="notice error" role="alert" hidden></div>
-      <div class="dialog-actions"><button class="button secondary" type="button" id="cancel-watch">关闭</button><button class="button secondary" type="button" id="back-to-product" hidden>返回商品详情</button><button class="button secondary" type="button" id="retry-product" hidden>重新加载</button><button class="button primary" type="button" id="start-watch" disabled>设置价格监控 <span data-icon="arrowRight"></span></button><button class="button primary" id="add-watch" type="submit" disabled hidden>加入监控</button></div>
-    </form>
-  </dialog>
-  <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-title"><h2 id="confirm-title">删除这项监控？</h2><p>对应的价格记录和提醒也会被删除。</p><div class="dialog-actions"><button class="button secondary" id="confirm-cancel">保留监控</button><button class="button danger" id="confirm-delete">确认删除</button></div></dialog>
-  <div id="toast" role="status" class="toast" hidden></div>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="color-scheme" content="light" />
+        <title>ShopAgent · 价格监控</title>
+        <link
+            rel="icon"
+            href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%231b6351'/%3E%3Cpath d='M9 13h5l4 14h12l3-10H16M20 10v10m-4-4 4 4 4-4' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E"
+        />
+      <script type="module" crossorigin src="/static/assets/index-BTmlBN65.js"></script>
+      <link rel="stylesheet" crossorigin href="/static/assets/index-B4xsDcRl.css">
+    </head>
+    <body>
+        <div id="app"></div>
+        <noscript>ShopAgent 价格监控需要启用 JavaScript。默认使用虚构演示目录。</noscript>
+    </body>
 </html>
