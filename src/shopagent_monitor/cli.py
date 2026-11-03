@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+from io import TextIOWrapper
 from pathlib import Path
+import sys
 
 from . import __version__
 from .paths import DEFAULT_DATASET_PATH, default_state_dir
@@ -33,6 +35,9 @@ def parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> None:
+    for stream in (sys.stdout, sys.stderr):
+        if isinstance(stream, TextIOWrapper):
+            stream.reconfigure(encoding="utf-8")
     options = parser()
     args = options.parse_args(argv)
     if not 1 <= args.port <= 65535:

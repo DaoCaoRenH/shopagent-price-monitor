@@ -22,6 +22,8 @@
 
 需要 Python 3.11 或更高版本。
 
+命令行帮助与错误输出统一使用 UTF-8，重定向到文件时也不依赖系统语言。
+
 Windows PowerShell：
 
 ```powershell

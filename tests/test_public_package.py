@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -79,6 +81,24 @@ class PublicPackageTests(unittest.TestCase):
         self.assertIsNone(options.model_config)
         self.assertEqual(options.host, "127.0.0.1")
         self.assertFalse(options.data_dir.is_relative_to(DEFAULT_DATASET_PATH.parent))
+
+    def test_cli_help_and_errors_use_utf8_with_legacy_redirected_streams(self):
+        setup = (
+            "import sys; "
+            "sys.stdout.reconfigure(encoding='cp1252'); "
+            "sys.stderr.reconfigure(encoding='cp1252'); "
+            "from shopagent_monitor.cli import main; "
+        )
+        for args, code, stream, expected in (
+            (["--help"], 0, "stdout", "商品搜索与价格监控"),
+            (["--unknown=测试"], 2, "stderr", "--unknown=测试"),
+        ):
+            with self.subTest(args=args):
+                result = subprocess.run(
+                    [sys.executable, "-c", setup + "main(" + repr(args) + ")"], capture_output=True, check=False
+                )
+                self.assertEqual(result.returncode, code, result.stderr.decode("utf-8", errors="replace"))
+                self.assertIn(expected, getattr(result, stream).decode("utf-8"))
 
 
 if __name__ == "__main__":
