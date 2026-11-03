@@ -4,9 +4,9 @@
 
 基于 **Vue 3 + TypeScript + FastAPI + SQLite**。安装包包含编译后的页面，运行时只需 Python。支持 OpenAI Responses 和兼容的 Chat Completions 工具调用，默认模型名为 `deepseek-v4.1-flash`，也可以完全使用目录检索与规则建议。
 
-![价格监控工作台](docs/images/overview.png)
+![我的监控：商品规格、当前价格与已采集最低价](docs/images/watch-list.jpg)
 
-截图使用虚构演示数据。[查看价格走势示例](docs/images/price-history.png)。
+截图使用虚构演示数据。[查看价格走势与购买建议](docs/images/price-trend-advice.jpg)。
 
 ## 功能演示
 
