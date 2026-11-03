@@ -4,9 +4,22 @@ This repository contains the price-monitoring application extracted from the
 maintainer's ShopAgent research project. It is an independent application,
 not an official ShopSimulator implementation.
 
+The original prototype and local experiments use product catalog data from
+ShopSimulator: https://github.com/ShopAgent-Team/ShopSimulator
+We acknowledge the original project's shopping-agent research environment
+and data resources. Its original product dataset is not redistributed here;
+external data remains subject to its own usage terms, not this project's MIT
+license.
+
 The demo product catalog is fictional and authored for this application.
 No third-party product dataset, model weights, private experiment reports,
 local credentials, user database, or prior Git history is distributed here.
+
+To respect platform data-access authorization and usage requirements, this
+release does not integrate with or scrape live e-commerce platforms. Product
+search uses local catalogs. Prices come from event-driven simulation,
+fixed-scenario replay or locally imported snapshots. Simulated prices are
+test data and do not represent live market prices or trends.
 
 Python dependencies retain their own licenses. Provider names describe API
 compatibility and do not imply affiliation or endorsement.
