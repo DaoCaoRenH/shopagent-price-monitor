@@ -1,4 +1,4 @@
-include README.md LICENSE NOTICE CONTRIBUTING.md SECURITY.md AGENTS.md CHANGELOG.md
+include README.md LICENSE NOTICE AGENTS.md CHANGELOG.md
 include run_price_monitor.py
 include frontend/package.json frontend/package-lock.json frontend/tsconfig.json frontend/vite.config.ts frontend/index.html frontend/.prettierrc.json
 recursive-include frontend/src *.ts *.vue *.css

@@ -2,7 +2,7 @@
 
 用自然语言寻找商品，确认规格后跟踪价格，在采集到新低价时提醒，并根据已有记录生成购买建议。
 
-基于 **Vue 3 + TypeScript + FastAPI + SQLite**。安装包包含编译后的页面，运行时只需 Python。支持 OpenAI Responses、兼容的 Chat Completions 和 Gemini 原生工具调用，也可以完全使用目录检索与规则建议。
+基于 **Vue 3 + TypeScript + FastAPI + SQLite**。安装包包含编译后的页面，运行时只需 Python。支持 OpenAI Responses 和兼容的 Chat Completions 工具调用，默认模型名为 `deepseek-v4.1-flash`，也可以完全使用目录检索与规则建议。
 
 ![价格监控工作台](docs/images/overview.png)
 
@@ -15,7 +15,7 @@
 - **价格监控**：按商品及完整规格保存，SQLite 持久化历史，后台定时采样。
 - **新低提醒**：新报价严格低于此前全部已采集报价才提醒；首次、同价和历史补录不提醒。
 - **价格模拟**：事件驱动调价/限时促销，以及五种确定性场景回放。
-- **购买建议**：结合预算、急用程度与已采集价格给出建议和依据，失败时使用规则建议。
+- **购买建议**：打开详情即显示价格概览，结合预算与急用程度分析；Agent 支持手动/自动切换，失败时使用规则建议。自动模式仅在当前详情页打开时触发，同一份证据去重，最短调用间隔一分钟。
 - **模型设置与搜索记录**：页面配置模型、查看过去候选、继续加入监控。
 
 ## 数据来源与模拟说明
@@ -58,13 +58,13 @@ python3 -m venv .venv
 
 在“模型配置”页面选择协议，填写模型和根地址，测试连接后保存。Responses 可开启流式状态；思考强度、上下文预算、超时、网络重试次数和搜索操作上限均可调整。
 
-也可以在首次启动时传入配置：
+也可以在首次启动时传入配置。先将示例中的 `base_url` 替换为模型供应商的根地址，并设置 `SHOPAGENT_MODEL_API_KEY` 环境变量：
 
 ```powershell
-.\.venv\Scripts\python.exe -m shopagent_monitor --model-config examples/model-local-responses.json
+.\.venv\Scripts\python.exe -m shopagent_monitor --model-config examples/model-deepseek-responses.json
 ```
 
-示例默认连接本机 `127.0.0.1:8080/v1` 的 MiniCPM5-2B；模型服务和权重需自行准备。其他服务可参考 [模型配置说明](docs/model-configuration.md)，模型名称请使用供应商实际支持的值。已保存的页面配置优先于启动配置，`--catalog-only` 可在本次启动关闭模型。
+默认填写 `deepseek-v4.1-flash`，服务地址需按供应商填写；`api.example.com` 只是占位地址。Responses 示例见上方，Chat Completions 示例见 `examples/model-openai-compatible.json`；协议和模型名需与供应商实际支持的值一致，详见 [模型配置说明](docs/model-configuration.md)。未配置时默认使用目录检索。已保存的页面配置优先于启动配置，`--catalog-only` 可在本次启动关闭模型。
 
 模型请求超时只重试当前轮；无效工具调用最多补正 2 次并计入总轮次，已有搜索和详情保留。最终仍未完成筛选时，已有候选以“筛选未完成”返回并保存，尚无候选才回退目录检索。
 
@@ -92,7 +92,7 @@ python3 -m venv .venv
 ```text
 src/shopagent_monitor/
   app/                 # API、Agent、监控、模拟、SQLite 及编译后的静态页面
-  llm/                 # 配置、消息、三种协议、SSE 与上下文预算
+  llm/                 # 配置、消息、两种协议、SSE 与上下文预算
   resources/           # 虚构演示目录和固定检索配置
   catalog_retrieval.py # 确定性的字段加权 Unicode BM25
   data.py              # 公开商品字段加载
@@ -127,7 +127,7 @@ Set-Location ..
 
 修改前端源码需要 Node 22.12+ 或 24+；普通用户运行安装包无需 Node。`npm run dev` 启动前端开发服务器，默认将 `/api` 代理到 `127.0.0.1:8092`，请在另一个终端用 `--port 8092` 启动 Python 后端。正式运行由 FastAPI 同源提供页面与接口。
 
-`npm run build` 会重建 `src/shopagent_monitor/app/static/`，生成文件随源码提交并进入 wheel。不要直接编辑生成文件；代码分层与异步状态约定见 [前端开发说明](docs/frontend-refactor.md)。CI 在 Windows / Ubuntu、Python 3.11 / 3.12 上执行前后端测试、构建一致性和安装包验证；测试使用临时数据库、虚构商品和受控模型响应。贡献约定见 [CONTRIBUTING.md](CONTRIBUTING.md)，运行边界见 [SECURITY.md](SECURITY.md)。
+`npm run build` 会重建 `src/shopagent_monitor/app/static/`，生成文件随源码提交并进入 wheel。不要直接编辑生成文件；代码分层与异步状态约定见 [前端开发说明](docs/frontend-refactor.md)。CI 在 Windows / Ubuntu、Python 3.11 / 3.12 上执行前后端测试、构建一致性和安装包验证；测试使用临时数据库、虚构商品和受控模型响应。
 
 准备发布前可运行 `python tools/check_release.py` 检查已加入 Git 的文件，以及 `python -m build` 构建安装包。安装 wheel 后执行 `python tools/verify_install.py`，确认网页和演示数据随包分发。版本与验证记录见 [CHANGELOG.md](CHANGELOG.md)。
 

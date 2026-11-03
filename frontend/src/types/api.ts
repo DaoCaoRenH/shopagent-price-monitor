@@ -165,7 +165,19 @@ export interface Advice {
     based_on: Pick<Watch, 'history_revision' | 'last_error' | 'active' | 'interval_seconds'>
     preferences: { budget: Money | null; urgency: string }
     reasons: { id: string; text: string }[]
-    metrics: { first_observed_at: string; latest_observed_at: string }
+    metrics: {
+        first_observed_at: string
+        latest_observed_at: string
+        current_price: Money
+        low_price: Money
+        gap_to_low_percent: number
+        sample_count: number
+        recent_count: number
+        recent_direction: 'up' | 'down' | 'flat' | 'insufficient'
+        new_low: boolean
+        quote_stale: boolean
+        simulation: boolean
+    }
 }
 export interface SearchLimits {
     max_searches: number
@@ -174,7 +186,7 @@ export interface SearchLimits {
 }
 export interface ModelInput {
     enabled: boolean
-    provider: 'openai-responses' | 'openai-chat' | 'gemini'
+    provider: 'openai-responses' | 'openai-chat'
     model: string
     base_url: string
     api_key_required: boolean

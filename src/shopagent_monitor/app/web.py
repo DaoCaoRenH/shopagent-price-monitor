@@ -20,6 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from ..paths import DEFAULT_DATASET_PATH, default_state_dir
 from ..llm.model import ModelConfig
 from .agent import MonitoringAgent
+from .advice import PurchaseAdvisor
 from .catalog import MonitoringCatalog
 from .domain import MonitorError, PriceQuote, parse_timestamp, price_minor, timestamp, utc_now
 from .service import MonitoringService
@@ -297,6 +298,17 @@ def create_app(
     @app.post("/api/watches/{watch_id}/refresh")
     def refresh(watch_id: str):
         return app.state.monitor.refresh(watch_id)
+
+    @app.get("/api/watches/{watch_id}/advice")
+    def purchase_advice_preview(
+        watch_id: str,
+        budget: str | None = Query(default=None, max_length=80),
+        urgency: Literal["flexible", "soon"] = "flexible",
+    ):
+        evidence = app.state.monitor.advice_evidence(watch_id, budget=budget, urgency=urgency)
+        # Page visits and polling never acquire the model lock or request a model.
+        revision = app.state.models.active()[1]
+        return {**PurchaseAdvisor().advise(evidence), "model_revision": revision}
 
     @app.post("/api/watches/{watch_id}/advice")
     def purchase_advice(watch_id: str, body: AdviceInput):

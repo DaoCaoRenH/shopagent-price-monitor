@@ -296,7 +296,6 @@ class MonitoringAgent:
                     tool_call_id=call.call_id or str(index),
                     tool_name=call.name,
                     arguments=args,
-                    thought_signature=call.thought_signature,
                 )
             )
             if call.name == "finish":

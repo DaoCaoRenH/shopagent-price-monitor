@@ -49,7 +49,6 @@ onMounted(load)
                                 >接口协议<select id="model-provider" v-model="draft.provider">
                                     <option value="openai-responses">OpenAI Responses</option>
                                     <option value="openai-chat">OpenAI Chat Completions</option>
-                                    <option value="gemini">Gemini 原生接口</option>
                                 </select></label
                             ><label class="field-label" for="model-name"
                                 >模型名称<input
@@ -57,7 +56,7 @@ onMounted(load)
                                     v-model="draft.model"
                                     required
                                     maxlength="200"
-                                    placeholder="MiniCPM5-2B"
+                                    placeholder="deepseek-v4.1-flash"
                                     spellcheck="false" /></label
                             ><label class="field-label settings-wide" for="model-url"
                                 >服务地址<input
@@ -66,12 +65,10 @@ onMounted(load)
                                     type="url"
                                     required
                                     maxlength="500"
-                                    placeholder="http://127.0.0.1:8080/v1"
+                                    placeholder="https://api.example.com/v1"
                                     spellcheck="false"
                                 /><small class="field-help">{{
-                                    draft.provider === 'gemini'
-                                        ? '填写根地址，例如 https://generativelanguage.googleapis.com/v1beta；无需填写模型路径。'
-                                        : `填写根地址，通常包含 /v1；无需填写 ${draft.provider === 'openai-chat' ? '/chat/completions' : '/responses'}。`
+                                    `填写供应商的根地址，通常包含 /v1；无需填写 ${draft.provider === 'openai-chat' ? '/chat/completions' : '/responses'}。`
                                 }}</small></label
                             ><label class="settings-toggle settings-wide"
                                 ><input
@@ -116,11 +113,9 @@ onMounted(load)
                                         >
                                             {{ label }}
                                         </option></select
-                                    ><small class="field-help">{{
-                                        draft.provider === 'gemini'
-                                            ? '默认思考预算为 0；其他强度映射为思考 Token 预算，需模型支持。'
-                                            : '默认不额外指定思考参数；其他档位需模型服务支持。'
-                                    }}</small></label
+                                    ><small class="field-help"
+                                        >默认不额外指定思考参数；其他档位需模型服务支持。</small
+                                    ></label
                                 ><label class="field-label" for="model-context"
                                     >上下文长度（Token）<input
                                         id="model-context"

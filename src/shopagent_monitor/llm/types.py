@@ -42,12 +42,9 @@ class ModelToolCall:
     name: str
     arguments: Mapping[str, Any]
     call_id: str | None = None
-    thought_signature: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         value = {"name": self.name, "arguments": dict(self.arguments), "call_id": self.call_id}
-        if self.thought_signature is not None:
-            value["thought_signature"] = self.thought_signature
         return value
 
 

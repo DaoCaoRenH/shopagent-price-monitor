@@ -5,7 +5,6 @@ defineProps<{ settings: ModelSettings | null }>()
 const providers = {
     'openai-responses': 'Responses',
     'openai-chat': 'Chat Completions',
-    gemini: 'Gemini 原生',
 }
 </script>
 <template>

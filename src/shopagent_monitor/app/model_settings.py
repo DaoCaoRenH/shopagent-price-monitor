@@ -27,7 +27,7 @@ from .search_progress import SearchCancelled, SearchProgress
 class ModelSettingsInput(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
     enabled: bool = Field(default=True, strict=True)
-    provider: Literal["openai-responses", "openai-chat", "gemini"] = "openai-responses"
+    provider: Literal["openai-responses", "openai-chat"] = "openai-responses"
     model: str = Field(min_length=1, max_length=200)
     base_url: str = Field(min_length=1, max_length=500)
     api_key_required: bool = Field(default=False, strict=True)
@@ -75,7 +75,12 @@ class ModelSettingsInput(BaseModel):
         return self
 
 
-DEFAULT = ModelSettingsInput(model="MiniCPM5-2B", base_url="http://127.0.0.1:8080/v1")
+DEFAULT = ModelSettingsInput(
+    enabled=False,
+    model="deepseek-v4.1-flash",
+    base_url="https://api.example.com/v1",
+    api_key_required=True,
+)
 FIELDS = (
     "provider",
     "model",
@@ -115,7 +120,7 @@ class ModelSettings:
         self._search_limits = agent.search_limits
         self._managed_credential: Path | None = None
         self._config = agent.config or ModelConfig.from_mapping(
-            DEFAULT.model_dump(exclude={"api_key", "clear_api_key"})
+            DEFAULT.model_dump(exclude={"api_key", "clear_api_key"}) | {"api_key_env": "SHOPAGENT_MODEL_API_KEY"}
         )
         self._enabled = agent.backend is not None
         self.revision = uuid4().hex
@@ -183,8 +188,6 @@ class ModelSettings:
         config = replace(
             self._config,
             **{key: getattr(body, key) for key in FIELDS},
-            # A startup Gemini thinking budget must not override the selected effort.
-            reasoning_budget=0 if body.provider == "gemini" and body.reasoning_effort == "none" else None,
         )
         key = body.api_key or self._config._credential_api_key
         # Retaining a credential must never send it to a newly entered origin.
@@ -217,10 +220,7 @@ class ModelSettings:
                     value = {key: getattr(config, key) for key in FIELDS} | {
                         "enabled": body.enabled,
                         "api_key_env": config.api_key_env,
-                        "reasoning": {
-                            "effort": config.reasoning_effort,
-                            **({"budget": config.reasoning_budget} if config.reasoning_budget is not None else {}),
-                        },
+                        "reasoning": {"effort": config.reasoning_effort},
                         "search_limits": body.search_limits.model_dump(),
                     }
                     if config._credential_api_key:

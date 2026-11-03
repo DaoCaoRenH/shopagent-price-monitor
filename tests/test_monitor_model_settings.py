@@ -10,7 +10,7 @@ import socket
 import ssl
 import unittest
 from unittest.mock import Mock, patch
-from urllib.parse import urlsplit, parse_qs, quote
+from urllib.parse import quote
 from urllib.error import HTTPError, URLError
 
 try:
@@ -34,6 +34,7 @@ from shopagent_monitor.llm.model import (
     ModelFailure,
     ModelResponse,
     ModelToolCall,
+    create_model_backend,
 )
 
 
@@ -90,22 +91,29 @@ class ModelSettingsTests(unittest.TestCase):
             ModelSettings(MonitoringAgent(self.catalog), path=self.path).public()["max_context_tokens"], 24576
         )
 
-    def test_gemini_effort_replaces_startup_fixed_thinking_budget(self):
-        config = ModelConfig(
-            provider="gemini",
-            model="test-model",
-            api_key_required=False,
-            reasoning_effort="high",
-            reasoning_budget=8192,
-            max_context_tokens=24576,
-        )
-        models = ModelSettings(MonitoringAgent(self.catalog, config), path=self.path)
-        models.save(self.body(provider="gemini", reasoning_effort="low"))
-        self.assertIsNone(models.agent.config.reasoning_budget)
-        models.save(self.body(provider="gemini", reasoning_effort="none"))
-        self.assertEqual(models.agent.config.reasoning_budget, 0)
-        restored = ModelSettings(MonitoringAgent(self.catalog), path=self.path)
-        self.assertEqual(restored.agent.config.reasoning_budget, 0)
+    def test_new_install_defaults_to_deepseek_without_starting_model_requests(self):
+        public = self.models.public()
+        self.assertEqual(public["model"], "deepseek-v4.1-flash")
+        self.assertEqual(public["provider"], "openai-responses")
+        self.assertTrue(public["api_key_required"])
+        self.assertFalse(public["enabled"])
+        self.assertIsNone(self.models.agent.backend)
+        example = Path(__file__).resolve().parents[1] / "examples/model-deepseek-responses.json"
+        config = ModelConfig.from_file(example)
+        self.assertEqual(config.model, public["model"])
+        self.assertEqual(config.provider, public["provider"])
+
+    def test_removed_provider_is_rejected_before_any_model_request(self):
+        for provider in ("gemini", "google", "google-gemini", "gemini-generate-content"):
+            with self.subTest(provider=provider):
+                with self.assertRaises(ValueError):
+                    self.body(provider=provider)
+                with self.assertRaisesRegex(ModelFailure, "unsupported provider"):
+                    ModelConfig.from_mapping({"provider": provider, "model": "test-model"})
+                with patch("shopagent_monitor.llm.model.urllib.request.urlopen") as request:
+                    with self.assertRaisesRegex(ModelFailure, "unsupported provider"):
+                        create_model_backend(ModelConfig(provider=provider, model="test-model", api_key_required=False))
+                    request.assert_not_called()
 
     def test_context_limit_reserves_output_and_prevents_oversized_search_or_advice(self):
         backend = Mock()
@@ -253,7 +261,7 @@ class ModelSettingsTests(unittest.TestCase):
 
     def test_native_backend_http_errors_show_status_and_redacted_provider_reason(self):
         key = "sk-fixture-private-key"
-        for provider in ("openai-responses", "openai-chat", "gemini"):
+        for provider in ("openai-responses", "openai-chat"):
             for status in (400, 401, 403, 404, 405, 429, 503):
                 with self.subTest(provider=provider, status=status):
                     raw = json.dumps({"error": {"message": f"Model unavailable; received key {key}"}}).encode()
@@ -292,9 +300,9 @@ class ModelSettingsTests(unittest.TestCase):
     def test_diagnostics_remove_known_encoded_environment_and_truncated_credentials(self):
         key = "opaque-fixture/key+secret-123"
         config = ModelConfig(
-            provider="gemini",
+            provider="openai-responses",
             model="test-model",
-            base_url="https://provider.invalid/v1beta",
+            base_url="https://provider.invalid/v1",
             api_key_env="SHOPAGENT_ERROR_TEST_KEY",
         )
         with patch.dict("os.environ", {"SHOPAGENT_ERROR_TEST_KEY": key}):
@@ -409,15 +417,8 @@ class ModelSettingsTests(unittest.TestCase):
                         ]
                     }
                 else:
-                    value = {
-                        "candidates": [
-                            {
-                                "content": {
-                                    "parts": [{"functionCall": {"name": "connection_check", "args": {"ok": True}}}]
-                                }
-                            }
-                        ]
-                    }
+                    self.send_error(404)
+                    return
                 raw = json.dumps(value).encode()
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
@@ -429,20 +430,18 @@ class ModelSettingsTests(unittest.TestCase):
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
         try:
-            for provider in ("openai-responses", "openai-chat", "gemini"):
+            for provider in ("openai-responses", "openai-chat"):
                 body = self.body(provider=provider, api_key_required=True, api_key="fixture-http-key").model_copy(
                     update={"base_url": f"http://127.0.0.1:{server.server_port}/v1"}
                 )
                 self.assertTrue(self.models.test(body)["ok"], provider)
             self.assertEqual(requests[0][1], "Bearer fixture-http-key")
             self.assertEqual(requests[1][1], "Bearer fixture-http-key")
-            self.assertEqual(parse_qs(urlsplit(requests[2][0]).query)["key"], ["fixture-http-key"])
             self.assertEqual(requests[0][2]["model"], "test-model")
             self.assertEqual(requests[0][2]["max_output_tokens"], 128)
             self.assertNotIn("reasoning", requests[0][2])
             self.assertNotIn("reasoning_effort", requests[1][2])
-            self.assertEqual(requests[2][2]["generationConfig"]["thinkingConfig"]["thinkingBudget"], 0)
-            for provider in ("openai-responses", "openai-chat", "gemini"):
+            for provider in ("openai-responses", "openai-chat"):
                 body = self.body(
                     provider=provider,
                     api_key_required=True,
@@ -451,11 +450,10 @@ class ModelSettingsTests(unittest.TestCase):
                     max_context_tokens=32768,
                 ).model_copy(update={"base_url": f"http://127.0.0.1:{server.server_port}/v1"})
                 self.assertTrue(self.models.test(body)["ok"], provider)
-            self.assertEqual(requests[3][2]["reasoning"], {"effort": "low"})
-            self.assertEqual(requests[3][2]["max_output_tokens"], 768)
-            self.assertEqual(requests[4][2]["reasoning_effort"], "low")
-            self.assertNotIn("temperature", requests[4][2])
-            self.assertEqual(requests[5][2]["generationConfig"]["thinkingConfig"]["thinkingBudget"], 1024)
+            self.assertEqual(requests[2][2]["reasoning"], {"effort": "low"})
+            self.assertEqual(requests[2][2]["max_output_tokens"], 768)
+            self.assertEqual(requests[3][2]["reasoning_effort"], "low")
+            self.assertNotIn("temperature", requests[3][2])
             self.assertFalse(self.path.exists())
             self.assertFalse(self.models.public()["enabled"])
         finally:

@@ -1,6 +1,6 @@
 {
   "provider": "openai-chat",
-  "model": "your-model-name",
+  "model": "deepseek-v4.1-flash",
   "base_url": "https://api.example.com/v1",
   "api_key_required": true,
   "api_key_env": "SHOPAGENT_MODEL_API_KEY",

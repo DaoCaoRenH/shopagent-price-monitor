@@ -240,7 +240,6 @@ class PurchaseAdvisor:
                     tool_call_id=call.call_id or str(index),
                     tool_name=call.name,
                     arguments=dict(call.arguments),
-                    thought_signature=call.thought_signature,
                 )
             )
             # Deliberate allowlist: no simulation scenario, seed, sequence or run state.

@@ -32,7 +32,6 @@ class ContextTokenCounter:
             if isinstance(message, AssistantMessage):
                 content += message.tool_name or ""
                 content += json.dumps(dict(message.arguments), ensure_ascii=False)
-                content += message.thought_signature or ""
             content += getattr(message, "tool_call_id", "") or ""
             total += self._text(content) + 16
         return math.ceil(total * self.scale)

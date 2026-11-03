@@ -2345,6 +2345,172 @@ dialog::backdrop {
     gap: 12px;
     margin-bottom: 12px;
 }
+.advice-overview-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.advice-overview-heading > strong {
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--green);
+}
+.advice-overview[data-decision='refresh_quote'] .advice-overview-heading > strong {
+    color: var(--orange);
+}
+.advice-action {
+    margin-top: 9px;
+    color: var(--secondary);
+    font-size: 12px;
+    line-height: 1.8;
+}
+.advice-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+}
+.advice-facts > div {
+    padding: 11px 10px;
+    background: var(--inset);
+    border-radius: 6px;
+}
+.advice-facts dt {
+    color: var(--secondary);
+    font-size: 11px;
+}
+.advice-facts dd {
+    margin: 3px 0 0;
+    font-size: 20px;
+    font-weight: 650;
+}
+.advice-facts small {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--secondary);
+}
+.advice-key-reasons {
+    padding-left: 16px;
+    margin: 12px 0;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--secondary);
+}
+.advice-key-reasons li + li {
+    margin-top: 6px;
+}
+.advice-evidence {
+    font-size: 11px;
+    margin-top: 12px;
+}
+.advice-evidence summary {
+    cursor: pointer;
+    padding: 8px 0;
+    color: var(--green);
+    min-height: 36px;
+}
+.advice-evidence summary span {
+    margin-left: 6px;
+    color: var(--secondary);
+}
+.advice-placeholder {
+    padding: 12px 0;
+    color: var(--secondary);
+    font-size: 12px;
+}
+.purchase-advice .advice-mode {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    border-top: 1px solid var(--border);
+    margin-top: 14px;
+    padding-top: 14px;
+}
+.advice-mode legend {
+    grid-column: 1/-1;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 0;
+    font-size: 11px;
+    color: var(--secondary);
+}
+.advice-mode label {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+}
+.advice-mode label.selected {
+    background: var(--green-soft);
+    border-color: var(--green);
+    color: var(--green);
+}
+.advice-mode input {
+    accent-color: var(--green);
+    margin: 0;
+    width: 14px;
+    height: 14px;
+}
+.advice-personalize {
+    margin-top: 14px;
+}
+.advice-preferences {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 13px;
+    margin-bottom: 14px;
+}
+.advice-preferences summary {
+    cursor: pointer;
+    min-height: 44px;
+    padding: 5px 0;
+    font-size: 12px;
+}
+.advice-preferences summary small {
+    color: var(--secondary);
+    font-size: 10px;
+    margin-left: 5px;
+}
+.advice-preference-summary {
+    display: block;
+    margin: 3px 0 0 15px;
+    font-size: 11px;
+    color: var(--secondary);
+    overflow-wrap: anywhere;
+}
+.advice-preferences .advice-fields {
+    margin-top: 15px;
+}
+.purchase-advice .advice-generate {
+    width: 100%;
+    min-height: 44px;
+    font-size: 12px;
+}
+.advice-analysis-hint,
+.advice-running,
+.advice-stale-note {
+    margin-top: 10px;
+    color: var(--secondary);
+    font-size: 11px;
+    line-height: 1.7;
+}
+.advice-running {
+    color: var(--green);
+}
+.advice-stale-note {
+    color: var(--orange);
+}
+.advice-refresh {
+    min-height: 40px;
+    margin: 5px 0;
+    font-size: 11px;
+}
 .advice-fields label {
     min-width: 0;
     font-size: 11px;
@@ -3210,8 +3376,16 @@ dialog::backdrop {
     .watch-support .purchase-advice {
         margin: 0;
     }
+    .watch-support .purchase-advice:first-child {
+        grid-column: 1/-1;
+    }
     .watch-chart-wrap .chart {
         min-height: 210px;
+    }
+}
+@media (max-width: 900px) {
+    .watch-support {
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 @media (max-width: 700px) {

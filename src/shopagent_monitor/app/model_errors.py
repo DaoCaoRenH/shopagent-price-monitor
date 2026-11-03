@@ -98,7 +98,6 @@ def connection_error(exc: Exception, config: ModelConfig) -> dict:
     suffix = {
         "openai-responses": "/responses",
         "openai-chat": "/chat/completions",
-        "gemini": f"/models/{quote(config.model, safe='')}:generateContent",
     }[config.provider]
     return {
         "ok": False,

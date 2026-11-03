@@ -147,7 +147,12 @@ async function act(kind: 'refresh' | 'toggle' | 'delete' | 'restart' | 'simulate
                             :presets="dashboard.state.presets"
                             :pending="!!state.pending"
                             @restart="act('restart')"
-                        /><PurchaseAdvice :key="current.id" :watch="current" />
+                        /><PurchaseAdvice
+                            :key="current.id"
+                            :watch="current"
+                            :busy="!!state.pending"
+                            @refresh="act('refresh')"
+                        />
                         <section class="watch-manage">
                             <h3>监控管理</h3>
                             <div class="detail-actions">

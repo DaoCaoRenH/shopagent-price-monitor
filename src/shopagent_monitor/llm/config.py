@@ -24,7 +24,6 @@ class ModelConfig:
     timeout_sec: float = 60.0
     max_retries: int = 2
     reasoning_effort: str = "none"
-    reasoning_budget: int | None = None
     send_reasoning_effort_none: bool = False
     max_context_tokens: int = 24576
     # Official OpenAI Responses supports strict function schemas.  Some
@@ -88,10 +87,6 @@ class ModelConfig:
             canonical_provider = "openai-chat"
             default_base_url = "http://127.0.0.1:8080/v1"
             default_api_key_env = "OPENAI_API_KEY"
-        elif provider in {"gemini", "google", "google-gemini", "gemini-generate-content"}:
-            canonical_provider = "gemini"
-            default_base_url = "https://generativelanguage.googleapis.com/v1beta"
-            default_api_key_env = "GEMINI_API_KEY"
         else:
             raise ModelFailure(f"unsupported provider: {provider}")
         model = str(value.get("model", "")).strip()
@@ -113,18 +108,6 @@ class ModelConfig:
         send_reasoning_effort_none = value.get("send_reasoning_effort_none", False)
         if not isinstance(send_reasoning_effort_none, bool):
             raise ModelFailure("send_reasoning_effort_none must be a boolean")
-        raw_budget = reasoning.get("budget", value.get("reasoning_budget"))
-        if raw_budget is None:
-            budget = None
-        else:
-            if isinstance(raw_budget, bool):
-                raise ModelFailure("reasoning budget must be a non-negative integer")
-            try:
-                budget = int(raw_budget)
-            except (TypeError, ValueError) as exc:
-                raise ModelFailure("reasoning budget must be a non-negative integer") from exc
-            if budget < 0:
-                raise ModelFailure("reasoning budget must be a non-negative integer")
         strict_tool_schema = value.get("strict_tool_schema", True)
         if not isinstance(strict_tool_schema, bool):
             raise ModelFailure("strict_tool_schema must be a boolean")
@@ -150,7 +133,6 @@ class ModelConfig:
             timeout_sec=max(1.0, float(value.get("timeout_sec", 60.0))),
             max_retries=max(0, min(5, int(value.get("max_retries", 2)))),
             reasoning_effort=effort,
-            reasoning_budget=budget,
             send_reasoning_effort_none=send_reasoning_effort_none,
             max_context_tokens=max(1, int(value.get("max_context_tokens", 24576))),
             strict_tool_schema=strict_tool_schema,

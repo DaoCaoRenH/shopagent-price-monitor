@@ -150,66 +150,7 @@ def _strict_parameters(schema: Any) -> dict[str, Any]:
     return result
 
 
-def _gemini_contents(messages: tuple[AgentMessage, ...]) -> list[dict[str, Any]]:
-    """Convert neutral messages to Gemini ``contents``."""
 
-    result: list[dict[str, Any]] = []
-    for message in messages:
-        if isinstance(message, UserMessage):
-            result.append({"role": "user", "parts": [{"text": message.content}]})
-        elif isinstance(message, AssistantMessage):
-            if message.tool_call_id and message.tool_name:
-                function_call = {
-                    "name": message.tool_name,
-                    "args": dict(message.arguments),
-                }
-                part: dict[str, Any] = {"functionCall": function_call}
-                if message.thought_signature:
-                    part["thoughtSignature"] = message.thought_signature
-                result.append(
-                    {
-                        "role": "model",
-                        "parts": [part],
-                    }
-                )
-            elif message.content:
-                result.append({"role": "model", "parts": [{"text": message.content}]})
-        elif isinstance(message, ToolResultMessage):
-            function_response = {
-                "functionResponse": {
-                    "name": message.tool_name,
-                    "response": {"error" if message.is_error else "output": message.content},
-                }
-            }
-            # Gemini requires consecutive function responses in one user turn.
-            last_content = result[-1] if result else None
-            if (
-                isinstance(last_content, dict)
-                and last_content.get("role") == "user"
-                and isinstance(last_content.get("parts"), list)
-                and any(isinstance(part, dict) and "functionResponse" in part for part in last_content["parts"])
-            ):
-                last_content["parts"].append(function_response)
-            else:
-                result.append({"role": "user", "parts": [function_response]})
-        elif message.content:
-            result.append({"role": "user", "parts": [{"text": f"[context summary]\n{message.content}"}]})
-    return result
-
-
-def _gemini_tools(tools: tuple[Mapping[str, Any], ...]) -> list[dict[str, Any]]:
-    return [
-        {
-            "functionDeclarations": [
-                {
-                    "name": str(tool["name"]),
-                    "description": str(tool.get("description", "")),
-                    "parametersJsonSchema": dict(tool.get("input_schema", {})),
-                }
-                for tool in tools
-            ]
-        }
-    ]
 
 
 def _parse_tool_arguments(value: Any) -> dict[str, Any] | None:
@@ -287,36 +228,6 @@ def _extract_openai_tool_call(value: Mapping[str, Any]) -> ModelToolCall | None:
     return None
 
 
-def _extract_gemini_tool_call(value: Mapping[str, Any]) -> ModelToolCall | None:
-    candidates = value.get("candidates", [])
-    if not isinstance(candidates, list):
-        return None
-    for candidate in candidates:
-        if not isinstance(candidate, Mapping):
-            continue
-        content = candidate.get("content", {})
-        if not isinstance(content, Mapping):
-            continue
-        parts = content.get("parts", [])
-        if not isinstance(parts, list):
-            continue
-        for part in parts:
-            if not isinstance(part, Mapping) or not isinstance(part.get("functionCall"), Mapping):
-                continue
-            function_call = part["functionCall"]
-            name = function_call.get("name")
-            arguments = _parse_tool_arguments(function_call.get("args", {}))
-            if isinstance(name, str) and name.strip() and arguments is not None:
-                thought_signature = part.get("thoughtSignature")
-                if not isinstance(thought_signature, str) or not thought_signature:
-                    thought_signature = None
-                return ModelToolCall(
-                    name=name.strip(),
-                    arguments=arguments,
-                    thought_signature=thought_signature,
-                )
-    return None
-
 
 def _extract_text(value: Mapping[str, Any]) -> str:
     direct = value.get("output_text")
@@ -333,24 +244,6 @@ def _extract_text(value: Mapping[str, Any]) -> str:
     return ""
 
 
-def _extract_gemini_text(value: Mapping[str, Any]) -> str:
-    candidates = value.get("candidates", [])
-    if not isinstance(candidates, list):
-        return ""
-    for candidate in candidates:
-        if not isinstance(candidate, Mapping):
-            continue
-        content = candidate.get("content", {})
-        if not isinstance(content, Mapping):
-            continue
-        parts = content.get("parts", [])
-        if not isinstance(parts, list):
-            continue
-        texts = [str(part["text"]) for part in parts if isinstance(part, Mapping) and isinstance(part.get("text"), str)]
-        if texts:
-            return "".join(texts)
-    return ""
-
 
 def _nonnegative_int(value: Any) -> int:
     try:
@@ -358,19 +251,6 @@ def _nonnegative_int(value: Any) -> int:
     except (TypeError, ValueError):
         return 0
 
-
-def _gemini_reasoning_budget(effort: str) -> int:
-    """Map portable effort names to Gemini's token-based thinking budget."""
-
-    return {
-        "minimal": 512,
-        "low": 1024,
-        "medium": 4096,
-        "high": 8192,
-        "xhigh": 12288,
-        "max": 16384,
-        "ultra": 24576,
-    }.get(effort, 0)
 
 
 def _provider_error_detail(body: str) -> str:

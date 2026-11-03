@@ -8,9 +8,9 @@ import type { ModelInput, ModelSettings } from '../types/api'
 const initial: ModelInput = {
     enabled: false,
     provider: 'openai-responses',
-    model: 'MiniCPM5-2B',
-    base_url: 'http://127.0.0.1:8080/v1',
-    api_key_required: false,
+    model: 'deepseek-v4.1-flash',
+    base_url: 'https://api.example.com/v1',
+    api_key_required: true,
     api_key: '',
     clear_api_key: false,
     timeout_sec: 12,

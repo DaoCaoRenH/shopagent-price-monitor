@@ -22,9 +22,6 @@ class AssistantMessage:
     tool_name: str | None = None
     arguments: Mapping[str, Any] = field(default_factory=dict)
     response_id: str | None = None
-    # Gemini returns an encrypted thought signature on some model parts. It
-    # must be replayed with the matching function call in the next turn.
-    thought_signature: str | None = None
     timestamp: float = 0.0
     kind: str = "assistant"
 
@@ -58,7 +55,7 @@ class ModelContext:
 
     ``system_prompt`` is intentionally separate from ``messages``.  This is
     the same boundary used by pi: providers may encode it as instructions,
-    systemInstruction, or another native field without changing the agent.
+    a system message, or another native field without changing the agent.
     """
 
     system_prompt: str
@@ -91,7 +88,6 @@ def message_dict(message: AgentMessage) -> dict[str, Any]:
             "tool_name": message.tool_name,
             "arguments": dict(message.arguments),
             "response_id": message.response_id,
-            "thought_signature": message.thought_signature,
             "timestamp": message.timestamp,
             "kind": message.kind,
         }

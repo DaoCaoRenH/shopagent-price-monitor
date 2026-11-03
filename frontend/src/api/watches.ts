@@ -31,6 +31,16 @@ export const simulatePrice = (id: string, price: string) =>
     post<{ alerts_created: number }>(`${watchUrl(id)}/simulate`, { price })
 export const generateAdvice = (id: string, budget: string, urgency: string) =>
     post<Advice>(`${watchUrl(id)}/advice`, { budget: budget || null, urgency })
+export const getAdvicePreview = (
+    id: string,
+    budget: string,
+    urgency: string,
+    signal?: AbortSignal,
+) => {
+    const query = new URLSearchParams({ urgency })
+    if (budget) query.set('budget', budget)
+    return request<Advice>(`${watchUrl(id)}/advice?${query}`, { signal })
+}
 export const readAlert = (id: number) => post(`/api/alerts/${id}/read`)
 export const importPrices = (body: unknown) =>
     post<{ inserted: number; alerts_created: number; duplicates: number }>(

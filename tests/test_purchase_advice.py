@@ -199,6 +199,35 @@ class PurchaseAdviceTests(unittest.TestCase):
         with self.assertRaises(MonitorError):
             self.service.advice_evidence("missing")
 
+    def test_http_preview_never_calls_model_and_uses_current_preferences_and_history(self):
+        from fastapi.testclient import TestClient
+        from shopagent_monitor.app.agent import MonitoringAgent
+        from shopagent_monitor.app.web import create_app
+
+        backend = AdviceBackend(fail=True)
+        app = create_app(
+            service=self.service, agent=MonitoringAgent(self.catalog, backend=backend), scheduler_enabled=False
+        )
+        path = f"/api/watches/{self.watch['id']}/advice"
+        with TestClient(app) as client:
+            first = client.get(path)
+            self.assertEqual(first.status_code, 200)
+            self.assertEqual(first.json()["engine"], "rules")
+            self.assertEqual(first.json()["decision"], "keep_watching")
+            self.assertFalse(first.json()["metrics"]["new_low"])
+            self.prices(8000, 9500)
+            latest = client.get(path, params={"budget": "90", "urgency": "soon"}).json()
+            self.assertEqual(latest["decision"], "wait")
+            self.assertEqual(latest["metrics"]["gap_to_low_percent"], 18.75)
+            self.assertGreater(latest["based_on"]["history_revision"], first.json()["based_on"]["history_revision"])
+            self.assertEqual(latest["preferences"]["budget"], "90.00")
+            self.now += timedelta(seconds=91)
+            self.assertEqual(client.get(path).json()["decision"], "refresh_quote")
+            self.assertEqual(client.get(path, params={"budget": "0"}).status_code, 400)
+            self.assertEqual(client.get(path, params={"urgency": "unknown"}).status_code, 422)
+            self.assertEqual(client.get("/api/watches/missing/advice").status_code, 404)
+        self.assertEqual(backend.contexts, [])
+
     def test_http_advice_rules_validation_and_native_model(self):
         from fastapi.testclient import TestClient
         from shopagent_monitor.app.agent import MonitoringAgent
