@@ -74,6 +74,42 @@ it('plots time gaps proportionally and retains the all-history low outside the v
     expect(chart.lowY).toBeGreaterThan(chart.points[0]!.y)
     expect(chart.lowY).toBeLessThan(chart.height - 28)
 })
+it.each([260, 680, 1100])(
+    'keeps actual quotes and the all-history low inside a %ipx chart',
+    (width) => {
+        const observations = [0, 1, 10].map(
+            (minute, id) =>
+                ({
+                    id,
+                    amount_minor: [12000, 10000, 11000][id]!,
+                    observed_at: new Date(before + minute * 60000).toISOString(),
+                }) as Observation,
+        )
+        const chart = priceChart(observations, 8000, width)!
+        for (const point of chart.points) {
+            expect(point.x).toBeGreaterThanOrEqual(chart.left)
+            expect(point.x).toBeLessThanOrEqual(width - chart.right)
+            expect(point.y).toBeGreaterThan(0)
+            expect(point.y).toBeLessThan(chart.lowY)
+        }
+        expect(chart.lowY).toBeLessThan(chart.height - 28)
+        expect(chart.points[1]!.x - chart.points[0]!.x).toBeCloseTo(
+            (chart.points[2]!.x - chart.points[0]!.x) / 10,
+        )
+    },
+)
+it('shows a single quote as one centered point on a phone', () => {
+    const quote = {
+        id: 1,
+        amount_minor: 100,
+        observed_at: new Date(before).toISOString(),
+    } as Observation
+    const chart = priceChart([quote], 100, 260)!
+    expect(chart.points).toHaveLength(1)
+    expect(chart.points[0]!.x).toBe((chart.left + chart.width - chart.right) / 2)
+    expect(Number.isFinite(chart.points[0]!.y)).toBe(true)
+    expect(priceChart([], 100, 260)).toBeNull()
+})
 it('folds updates for one execution step and ends running steps on fallback', () => {
     const events: ProgressEvent[] = [],
         event = {

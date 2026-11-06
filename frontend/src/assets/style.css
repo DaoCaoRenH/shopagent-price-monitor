@@ -454,22 +454,25 @@ dialog.product-dialog {
     outline: none;
 }
 :root {
-    --bg: #f4f6f5;
+    --bg: #f3f6fa;
     --surface: #fff;
-    --inset: #f7f9f8;
-    --ink: #1e302a;
-    --secondary: #66756e;
-    --muted: #78867f;
-    --border: #e3e9e5;
-    --green: #1b6351;
-    --green-hover: #144d3f;
-    --green-soft: #eaf3ee;
-    --orange: #ae501d;
+    --inset: #f6f8fb;
+    --ink: #182b3b;
+    --secondary: #526777;
+    --muted: #627887;
+    --border: #dce5ec;
+    --green: #087f86;
+    --green-hover: #06666c;
+    --green-soft: #e4f3f1;
+    --navy: #183b49;
+    --orange: #a95618;
     --orange-soft: #fff3e8;
     --danger: #b63d36;
-    --radius: 14px;
+    --radius: 12px;
     --small-radius: 8px;
-    --font: Inter, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --font: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --display: Bahnschrift, 'DIN Alternate', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --numeric: 'Cascadia Code', 'SFMono-Regular', Consolas, monospace;
 }
 * {
     box-sizing: border-box;
@@ -530,7 +533,7 @@ a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-    outline: 3px solid #79af96;
+    outline: 3px solid #2b9fa8;
     outline-offset: 3px;
 }
 [hidden] {
@@ -573,10 +576,11 @@ textarea:focus-visible {
 .sidebar {
     position: fixed;
     inset: 0 auto 0 0;
-    width: 208px;
-    background: #fff;
-    border-right: 1px solid var(--border);
-    padding: 31px 18px 24px;
+    width: 232px;
+    background: var(--navy);
+    color: #f5fbfd;
+    border-right: 1px solid #244b5b;
+    padding: 32px 18px 24px;
     display: flex;
     flex-direction: column;
     z-index: 10;
@@ -586,7 +590,8 @@ textarea:focus-visible {
     align-items: center;
     gap: 10px;
     padding: 0 9px;
-    font-size: 20px;
+    font-size: 23px;
+    font-family: var(--display);
     line-height: 1.25;
     font-weight: 700;
     letter-spacing: -0.5px;
@@ -595,14 +600,14 @@ textarea:focus-visible {
     display: block;
     font-size: 10px;
     font-weight: 400;
-    color: var(--secondary);
-    letter-spacing: 2px;
+    color: #b5cdd6;
+    letter-spacing: 3px;
     margin-top: 7px;
 }
 .brand-mark {
-    background: var(--green);
+    background: #2a6575;
     color: white;
-    border-radius: 11px;
+    border-radius: 10px;
     width: 38px;
     height: 40px;
     display: grid;
@@ -613,9 +618,9 @@ textarea:focus-visible {
     height: 25px;
 }
 .nav-label {
-    margin: 54px 16px 12px;
-    font-size: 10px;
-    color: var(--muted);
+    margin: 48px 16px 12px;
+    font-size: 11px;
+    color: #a9c4cf;
     letter-spacing: 1px;
 }
 .nav-item {
@@ -629,17 +634,19 @@ textarea:focus-visible {
     padding: 11px 16px;
     margin: 5px 0;
     border-radius: var(--small-radius);
-    color: var(--secondary);
+    color: #c4d8e1;
     text-align: left;
-    font-size: 13px;
+    font-size: 14px;
 }
 .nav-item:hover {
-    background: var(--inset);
+    background: #224b5b;
+    color: #fff;
 }
 .nav-item.active {
-    background: var(--green-soft);
-    color: var(--green);
+    background: #e4f3f1;
+    color: #075e65;
     font-weight: 600;
+    box-shadow: inset 3px 0 #48b3ad;
 }
 .nav-count {
     background: var(--orange-soft);
@@ -652,15 +659,19 @@ textarea:focus-visible {
 }
 .sidebar-foot {
     margin-top: auto;
-    padding: 18px 11px 0;
+    padding: 20px 11px 0;
+    border-top: 1px solid #355765;
+    display: flex;
+    align-items: start;
+    gap: 10px;
     font-size: 11px;
-    color: var(--secondary);
+    color: #d0e1e8;
 }
 .sidebar-foot small {
     display: block;
-    color: var(--muted);
-    font-size: 10px;
-    margin: 10px 0 0 12px;
+    color: #a9c4cf;
+    font-size: 11px;
+    margin: 5px 0 0;
 }
 .dot {
     width: 6px;
@@ -671,10 +682,10 @@ textarea:focus-visible {
     margin-right: 5px;
 }
 .workspace {
-    margin-left: 208px;
+    margin-left: 232px;
 }
 .topbar {
-    height: 76px;
+    height: 72px;
     background: white;
     border-bottom: 1px solid var(--border);
     display: flex;
@@ -718,14 +729,16 @@ textarea:focus-visible {
     background: var(--danger);
 }
 main {
-    padding: 30px 36px 16px;
+    padding: 28px 36px 16px;
+    max-width: 1700px;
+    margin: 0 auto;
 }
 .page-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin: 0 0 25px;
+    margin: 0 0 28px;
 }
 .eyebrow {
     font-size: 9px;
@@ -735,18 +748,19 @@ main {
     margin-bottom: 8px;
 }
 h1 {
-    font-size: 26px;
+    font-family: var(--display);
+    font-size: 30px;
     letter-spacing: -0.6px;
     font-weight: 650;
     line-height: 1.4;
 }
 .page-heading p {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--secondary);
     margin-top: 6px;
 }
 .heading-date {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--secondary);
     align-self: flex-end;
     padding-bottom: 4px;
@@ -760,7 +774,7 @@ h1 {
     min-height: 44px;
     padding: 10px 17px;
     border-radius: var(--small-radius);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 550;
     white-space: nowrap;
 }
@@ -821,7 +835,7 @@ h1 {
     background: white;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 22px 0;
+    padding: 18px 0;
     margin-bottom: 24px;
 }
 .metrics > div {
@@ -842,9 +856,7 @@ h1 {
     font-size: 11px;
 }
 .metrics strong {
-    font:
-        500 30px/1.2 'Segoe UI',
-        sans-serif;
+    font: 500 27px/1.2 var(--display);
     letter-spacing: -1px;
     font-variant-numeric: tabular-nums;
 }
@@ -856,7 +868,7 @@ h1 {
     color: var(--orange);
 }
 .search-panel {
-    padding: 22px 24px;
+    padding: 28px;
     background: white;
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -890,22 +902,22 @@ h1 {
     background: var(--inset);
     border: 1px solid var(--border);
     border-radius: 9px;
-    padding: 8px 10px 8px 16px;
+    padding: 12px 12px 12px 18px;
 }
 .search-input-wrap:focus-within {
-    border-color: #80ab96;
-    box-shadow: 0 0 0 3px #1b63510a;
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px #087f8614;
 }
 .search-input-wrap textarea {
     resize: vertical;
-    min-height: 50px;
+    min-height: 70px;
     max-height: 160px;
     border: 0;
     outline: none;
     background: none;
     flex: 1;
     min-width: 0;
-    font-size: 12px;
+    font-size: 14px;
     padding: 6px 0;
     color: var(--ink);
 }
@@ -990,12 +1002,12 @@ textarea::placeholder {
     border: 1px solid var(--border);
 }
 .product-title {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 550;
     overflow-wrap: anywhere;
 }
 .product-meta {
-    font-size: 10px;
+    font-size: 12px;
     color: var(--secondary);
     margin-top: 5px;
 }
@@ -1009,7 +1021,8 @@ textarea::placeholder {
     font-variant-numeric: tabular-nums;
 }
 .product-price strong {
-    font-size: 16px;
+    font-size: 18px;
+    font-family: var(--display);
     font-weight: 550;
 }
 .product-price small {
@@ -1028,6 +1041,7 @@ textarea::placeholder {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
+    box-shadow: 0 3px 12px #183b4903;
 }
 .panel-heading {
     padding: 19px 22px;
@@ -1154,10 +1168,10 @@ textarea::placeholder {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    font-size: 12px;
+    font-size: 14px;
 }
 .watch-variant {
-    font-size: 10px;
+    font-size: 12px;
     color: var(--secondary);
     margin-top: 6px;
     overflow: hidden;
@@ -1196,7 +1210,8 @@ textarea::placeholder {
 }
 .watch-price {
     text-align: right;
-    font-size: 14px;
+    font-size: 19px;
+    font-family: var(--display);
     font-weight: 550;
     font-variant-numeric: tabular-nums;
 }
@@ -1205,7 +1220,8 @@ textarea::placeholder {
 }
 .watch-price small {
     display: block;
-    font-size: 9px;
+    font-size: 11px;
+    font-family: var(--font);
     font-weight: 400;
     color: var(--muted);
     margin-top: 5px;
@@ -1699,10 +1715,10 @@ dialog::backdrop {
 }
 @media (min-width: 1800px) {
     .sidebar {
-        width: 224px;
+        width: 232px;
     }
     .workspace {
-        margin-left: 224px;
+        margin-left: 232px;
     }
     main {
         padding: 40px 48px 20px;
@@ -1745,7 +1761,7 @@ dialog::backdrop {
 }
 @media (max-width: 1150px) {
     .sidebar {
-        width: 176px;
+        width: 200px;
         padding-left: 12px;
         padding-right: 12px;
     }
@@ -1762,7 +1778,7 @@ dialog::backdrop {
         letter-spacing: 1px;
     }
     .workspace {
-        margin-left: 176px;
+        margin-left: 200px;
     }
     main {
         padding: 25px 24px 16px;
@@ -3269,21 +3285,29 @@ dialog::backdrop {
 }
 .watch-trend .detail-prices {
     margin: 0 0 24px;
+    background: var(--navy);
+    color: #fff;
+    padding: 26px;
+    border-radius: 10px;
 }
 .watch-trend .large-price {
-    font-size: 36px;
+    font-size: 48px;
+    font-family: var(--display);
+    letter-spacing: -1px;
 }
 .watch-trend .low-price strong {
-    font-size: 24px;
+    font-size: 27px;
+    font-family: var(--display);
+    color: #a9e3db;
 }
 .watch-trend .chart-heading {
     margin-top: 0;
 }
 .watch-chart-wrap {
-    background: var(--inset);
+    background: #fff;
     border: 1px solid var(--border);
     border-radius: 9px;
-    padding: 12px 8px 8px;
+    padding: 18px 14px 12px;
 }
 .watch-chart-wrap .chart {
     height: auto;
@@ -3307,14 +3331,15 @@ dialog::backdrop {
     padding-top: 18px;
 }
 .watch-support {
-    border-left: 1px solid var(--border);
-    padding-left: 24px;
+    padding-left: 0;
 }
 .watch-support .simulation-summary {
     margin-bottom: 20px;
 }
 .watch-support .purchase-advice {
     margin-top: 0;
+    background: var(--inset);
+    border-top: 3px solid var(--green);
 }
 .watch-support .advice-fields {
     grid-template-columns: minmax(0, 1fr);
@@ -3345,7 +3370,7 @@ dialog::backdrop {
         min-height: 300px;
     }
     .watch-support {
-        padding-left: 30px;
+        padding-left: 0;
     }
 }
 @media (max-width: 1150px) {
@@ -3460,7 +3485,7 @@ dialog::backdrop {
         gap: 22px;
     }
     .watch-trend .large-price {
-        font-size: 31px;
+        font-size: 38px;
     }
     .watch-trend .low-price strong {
         font-size: 20px;
@@ -3470,7 +3495,7 @@ dialog::backdrop {
         margin-bottom: 22px;
     }
     .watch-chart-wrap {
-        padding: 8px 2px;
+        padding: 12px 4px;
     }
     .watch-chart-wrap .chart {
         min-height: 175px;
@@ -3492,5 +3517,502 @@ dialog::backdrop {
     }
     .watch-trend .sample-event {
         font-size: 9px;
+    }
+}
+
+/* Price observation workspace: real quotes and the user's next action come first. */
+.demo-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--secondary);
+}
+.demo-label {
+    flex-shrink: 0;
+    border: 1px solid #bbd9db;
+    color: #06666c;
+    background: #e4f3f1;
+    border-radius: 5px;
+    padding: 2px 7px;
+    font-size: 11px;
+}
+.discovery-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    align-items: start;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+.discovery-grid > * {
+    min-width: 0;
+}
+.discovery-grid .search-panel {
+    margin-bottom: 0;
+}
+.search-source {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--secondary);
+}
+.search-guidance {
+    margin-top: 12px;
+    color: var(--secondary);
+    font-size: 12px;
+    line-height: 1.8;
+}
+.search-flow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 26px 0 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--border);
+    list-style: none;
+}
+.search-flow li {
+    display: flex;
+    gap: 9px;
+    align-items: start;
+}
+.search-flow li > span {
+    display: grid;
+    place-items: center;
+    width: 23px;
+    height: 23px;
+    flex-shrink: 0;
+    background: var(--green-soft);
+    color: var(--green);
+    border-radius: 50%;
+    font: 12px/1 var(--numeric);
+}
+.search-flow strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+}
+.search-flow small {
+    display: block;
+    color: var(--secondary);
+    font-size: 11px;
+    margin-top: 3px;
+}
+.section-kicker {
+    display: block;
+    color: var(--secondary);
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+.watch-preview .panel-heading {
+    padding: 20px;
+    min-height: 86px;
+}
+.watch-preview .panel-heading > .icon {
+    color: var(--green);
+    width: 26px;
+    height: 26px;
+}
+.preview-watch {
+    display: block;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+}
+.preview-watch:hover {
+    background: var(--inset);
+}
+.preview-watch-title {
+    display: flex;
+    align-items: start;
+    gap: 12px;
+    justify-content: space-between;
+}
+.preview-watch-title strong {
+    font-size: 13px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+.preview-watch-title .icon {
+    width: 15px;
+    height: 15px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+.preview-variant {
+    display: block;
+    font-size: 11px;
+    color: var(--secondary);
+    margin-top: 5px;
+}
+.preview-quote {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 5px 8px;
+    margin-top: 12px;
+}
+.preview-quote > strong {
+    font: 500 24px/1.25 var(--display);
+    font-variant-numeric: tabular-nums;
+}
+.preview-quote > strong small {
+    font-size: 14px;
+    padding-right: 3px;
+}
+.price-position {
+    display: inline-block;
+    color: var(--secondary);
+    font-size: 11px;
+    line-height: 1.7;
+}
+.price-position.at-low {
+    color: #06666c;
+}
+.watch-row .price-position {
+    margin-top: 6px;
+    background: var(--inset);
+    padding: 1px 7px;
+    border-radius: 4px;
+}
+.watch-row .price-position.at-low {
+    background: var(--green-soft);
+}
+.preview-all {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 52px;
+    padding: 12px 20px;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 600;
+}
+.preview-all:hover {
+    background: var(--green-soft);
+}
+.preview-all > span {
+    font-weight: 400;
+    color: var(--secondary);
+}
+.preview-all .icon {
+    width: 15px;
+    height: 15px;
+    margin-left: 5px;
+}
+.preview-empty {
+    padding: 28px 22px;
+    color: var(--secondary);
+}
+.preview-empty h3 {
+    color: var(--ink);
+    font-size: 14px;
+    margin: 16px 0 8px;
+}
+.preview-empty p {
+    font-size: 12px;
+    line-height: 1.9;
+}
+.preview-empty-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    background: var(--green-soft);
+    color: var(--green);
+    border-radius: 10px;
+}
+.mobile-price-label {
+    display: none;
+}
+.watch-trend .detail-prices .price-label {
+    color: #c5dbe3;
+    font-size: 12px;
+}
+.watch-trend .detail-prices .price-change {
+    color: #d3e2e7;
+    font-size: 12px;
+}
+.watch-trend .detail-prices .price-change.down {
+    color: #a9e3db;
+}
+.watch-trend .detail-prices .price-change.up {
+    color: #ffcca3;
+}
+.watch-trend .low-price .price-position {
+    color: #c5dbe3;
+    display: block;
+    margin-top: 7px;
+}
+.chart-readout {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 8px 10px;
+}
+.chart-readout strong {
+    display: block;
+    font: 500 23px/1.35 var(--display);
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+.chart-readout span {
+    display: block;
+    color: var(--secondary);
+    font-size: 11px;
+    margin-top: 4px;
+}
+.chart-navigation {
+    display: flex;
+    gap: 5px;
+}
+.chart-navigation .icon-button {
+    min-width: 36px;
+    min-height: 36px;
+    border-radius: 6px;
+}
+.chart-navigation .icon {
+    width: 16px;
+    height: 16px;
+}
+.chart-gridline {
+    stroke: var(--border);
+    stroke-dasharray: 3 5;
+}
+.chart-axis {
+    fill: var(--secondary);
+    font: 11px var(--font);
+}
+.chart-low-line {
+    stroke: #a95618;
+    stroke-dasharray: 5 5;
+    stroke-opacity: 0.65;
+}
+.chart-price-line {
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+}
+.chart-point {
+    fill: var(--green);
+    stroke: #fff;
+    stroke-width: 1.5;
+}
+.chart-cursor {
+    stroke: var(--green);
+    stroke-dasharray: 3 4;
+    opacity: 0.4;
+}
+.chart-selected-halo {
+    fill: var(--green);
+    opacity: 0.12;
+}
+.chart-selected-point {
+    fill: var(--green);
+    stroke: #fff;
+    stroke-width: 2;
+}
+.chart-help {
+    font-size: 11px;
+    color: var(--secondary);
+    padding: 2px 8px 0;
+}
+.watch-trend .chart-legend {
+    color: var(--orange);
+}
+.watch-support .advice-facts > div {
+    background: #fff;
+    border: 1px solid var(--border);
+}
+.watch-support .advice-facts dd {
+    font-family: var(--display);
+}
+.alert-info p > strong {
+    font: 500 20px/1.4 var(--display);
+}
+.source-block > .icon {
+    float: left;
+    color: var(--green);
+    width: 19px;
+    height: 19px;
+    margin: 4px 10px 0 0;
+}
+#import-watch {
+    width: 100%;
+    min-height: 44px;
+    border: 1px solid var(--border);
+    padding: 9px 12px;
+    border-radius: 7px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 13px;
+    margin: 8px 0 18px;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .button,
+    .nav-item,
+    .preview-watch,
+    .watch-row {
+        transition:
+            background-color 150ms,
+            border-color 150ms,
+            box-shadow 150ms;
+    }
+}
+@media (max-width: 1250px) {
+    .discovery-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .watch-preview {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .watch-preview .panel-heading,
+    .watch-preview .preview-all,
+    .watch-preview .preview-empty {
+        grid-column: 1/-1;
+    }
+    .watch-preview .panel-heading {
+        min-height: 68px;
+    }
+    .preview-watch {
+        border-right: 1px solid var(--border);
+    }
+    .preview-watch-title strong {
+        font-size: 12px;
+    }
+}
+@media (max-width: 900px) {
+    #view-watches .watch-table-head {
+        display: none;
+    }
+    #view-watches .watch-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        padding: 22px;
+    }
+    #view-watches .watch-row > div:first-child {
+        grid-column: 1/-1;
+    }
+    #view-watches .watch-row .product-title {
+        font-size: 14px;
+    }
+    #view-watches .watch-row .watch-price {
+        text-align: left;
+        font-size: 24px;
+    }
+    #view-watches .watch-trend-link {
+        grid-column: 1/-1;
+        justify-self: stretch;
+    }
+    .mobile-price-label {
+        display: block;
+        color: var(--secondary);
+        font: 11px var(--font);
+        margin-bottom: 5px;
+    }
+    .watch-preview {
+        display: block;
+    }
+    .preview-watch {
+        border-right: 0;
+    }
+    .preview-watch-title strong {
+        font-size: 14px;
+    }
+    .preview-empty {
+        padding-top: 20px;
+    }
+}
+@media (max-width: 700px) {
+    .demo-banner {
+        align-items: start;
+        font-size: 11px;
+        margin-bottom: 20px;
+    }
+    .sidebar {
+        padding: 18px 14px 0;
+    }
+    .sidebar .nav-item {
+        position: relative;
+        font-size: 10px;
+        min-height: 58px;
+    }
+    .sidebar .nav-item.active {
+        box-shadow: inset 0 -3px #48b3ad;
+    }
+    .sidebar .nav-count {
+        position: absolute;
+        right: 2px;
+        top: 2px;
+        line-height: 15px;
+    }
+    .page-heading p {
+        font-size: 13px;
+        line-height: 1.9;
+    }
+    .discovery-grid {
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    .discovery-grid .search-panel {
+        padding: 22px 18px;
+    }
+    .search-source {
+        display: none;
+    }
+    .search-guidance {
+        font-size: 12px;
+    }
+    .search-flow {
+        gap: 12px;
+        margin-top: 20px;
+    }
+    .search-flow li {
+        flex-direction: column;
+        gap: 7px;
+    }
+    .search-flow strong {
+        font-size: 12px;
+    }
+    .search-flow small {
+        font-size: 11px;
+    }
+    .preview-quote .price-position {
+        font-size: 12px;
+    }
+    .watch-trend .detail-prices {
+        padding: 20px 16px;
+    }
+    .watch-trend .low-price strong {
+        font-size: 22px;
+    }
+    .watch-trend .detail-prices .price-label {
+        font-size: 11px;
+    }
+    .chart-navigation .icon-button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    .chart-readout {
+        flex-wrap: wrap;
+    }
+    .chart-help {
+        font-size: 11px;
+    }
+    .watch-row .price-position {
+        font-size: 12px;
+    }
+    .price-position {
+        font-size: 10px;
+    }
+    .watch-detail-toolbar .button {
+        min-height: 44px;
     }
 }

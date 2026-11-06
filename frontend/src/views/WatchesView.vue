@@ -4,6 +4,7 @@ import { useDashboard } from '../composables/useDashboard'
 import { amount, date, variant } from '../lib/format'
 import EmptyState from '../components/common/EmptyState.vue'
 import Icon from '../components/common/Icon.vue'
+import PricePosition from '../components/watches/PricePosition.vue'
 const { state } = useDashboard(),
     filter = ref('all')
 const watches = computed(() =>
@@ -51,6 +52,7 @@ const watches = computed(() =>
                             <div class="watch-variant" :title="variant(watch)">
                                 {{ variant(watch) }}
                             </div>
+                            <PricePosition :watch="watch" />
                             <div class="watch-tags">
                                 <span class="status-label" :class="{ paused: !watch.active }">{{
                                     watch.simulation?.complete
@@ -71,10 +73,12 @@ const watches = computed(() =>
                             </div>
                         </div>
                         <div class="watch-price">
+                            <span class="mobile-price-label">当前报价</span>
                             ¥{{ amount(watch.current_price)
                             }}<small>{{ date(watch.current_observed_at) }}</small>
                         </div>
                         <div class="watch-price low">
+                            <span class="mobile-price-label">采集最低</span>
                             ¥{{ amount(watch.low_price)
                             }}<small>{{ watch.sample_count }} 次采样</small>
                         </div>

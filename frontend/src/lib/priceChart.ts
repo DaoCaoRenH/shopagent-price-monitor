@@ -1,11 +1,11 @@
 import type { Observation } from '../types/api'
 
 /** Geometry uses observed time and integer cents, including the complete-history low. */
-export function priceChart(observations: Observation[], lowMinor: number) {
+export function priceChart(observations: Observation[], lowMinor: number, availableWidth = 680) {
     if (!observations.length) return null
-    const width = 680,
-        height = 230,
-        left = 64,
+    const width = Math.max(240, Math.round(availableWidth)),
+        height = width < 400 ? 205 : 230,
+        left = width < 400 ? 48 : 64,
         right = 12,
         top = 15,
         bottom = 28

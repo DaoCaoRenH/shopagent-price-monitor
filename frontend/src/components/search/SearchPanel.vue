@@ -10,10 +10,13 @@ const { state, search, cancel } = useSearch()
     <section class="search-panel" aria-labelledby="search-title">
         <div class="section-title">
             <div class="title-with-icon">
-                <span class="accent-icon"><Icon name="spark" /></span>
+                <span class="accent-icon"><Icon name="search" /></span>
                 <h2 id="search-title">想关注什么商品？</h2>
             </div>
-            <span class="quiet-label">描述需求，搜索后确认规格</span>
+            <span class="search-source"
+                ><span class="dot"></span
+                >{{ state.running ? '搜索进行中' : '从商品需求开始' }}</span
+            >
         </div>
         <form id="search-form" @submit.prevent="search">
             <label class="sr-only" for="description">需要监控的商品描述</label>
@@ -32,6 +35,7 @@ const { state, search, cancel } = useSearch()
                 </button>
             </div>
         </form>
+        <p class="search-guidance">写下商品、规格和预算，找到候选后再确认要跟踪的款式。</p>
         <div class="search-examples">
             <span>试试搜索</span
             ><button
@@ -43,6 +47,20 @@ const { state, search, cancel } = useSearch()
                 {{ query }}</button
             ><button v-if="state.running" class="text-button" @click="cancel">停止接收</button>
         </div>
+        <ol v-if="!state.result && !state.running" class="search-flow" aria-label="添加监控的步骤">
+            <li>
+                <span>1</span>
+                <div><strong>找到商品</strong><small>按需求搜索候选</small></div>
+            </li>
+            <li>
+                <span>2</span>
+                <div><strong>确认规格</strong><small>选定要关注的款式</small></div>
+            </li>
+            <li>
+                <span>3</span>
+                <div><strong>跟踪价格</strong><small>查看记录与低价提醒</small></div>
+            </li>
+        </ol>
         <SearchProgress /><Notice :message="state.result?.history_warning" error />
         <div v-if="state.result && state.visible" id="search-results">
             <div class="results-heading">

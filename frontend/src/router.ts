@@ -25,8 +25,8 @@ export const router = createRouter({
             component: SearchView,
             meta: {
                 breadcrumb: '价格监控',
-                title: '商品价格监控',
-                subtitle: '关注想买的商品，等一个更合适的价格。',
+                title: '想买的，先关注起来。',
+                subtitle: '找到合适的商品，让每一次价格变化都有据可查。',
             },
         },
         {

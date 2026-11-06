@@ -59,8 +59,8 @@ watch(
     <a class="skip-link" href="#main" @click.prevent="focusMain">跳到主要内容</a>
     <aside class="sidebar">
         <RouterLink class="brand" to="/monitor" aria-label="ShopAgent 首页"
-            ><span class="brand-mark"><Icon name="bag" /></span
-            ><span>ShopAgent<small>你的价格观察员</small></span></RouterLink
+            ><span class="brand-mark"><Icon name="activity" /></span
+            ><span>ShopAgent<small>价格观察台</small></span></RouterLink
         >
         <div class="nav-label">我的工作台</div>
         <nav aria-label="主导航">
@@ -80,7 +80,7 @@ watch(
             >
         </nav>
         <div class="sidebar-foot">
-            <span class="dot"></span>本机工作空间<small>价格变化，留一份记录。</small>
+            <Icon name="database" /><span>本机工作空间<small>每个规格，一份价格记录。</small></span>
         </div>
     </aside>
     <div class="workspace">
@@ -104,20 +104,20 @@ watch(
                     state.error ? `无法连接监控服务：${state.error} 恢复后页面会自动重试。` : ''
                 "
                 error
-            /><Notice
-                v-if="state.status?.catalog_is_demo"
-                message="演示目录：商品和报价均为虚构内容，用于体验搜索、模拟监控和低价提醒。"
             />
+            <div v-if="state.status?.catalog_is_demo" class="demo-banner" role="note">
+                <span class="demo-label">演示模式</span>
+                <span>商品与报价均为虚构内容，供体验搜索、监控与低价提醒。</span>
+            </div>
             <section class="page-heading">
                 <div>
-                    <div class="eyebrow">SHOPPING, AT YOUR PACE</div>
                     <h1 id="page-title" tabindex="-1">{{ route.meta.title }}</h1>
                     <p>{{ route.meta.subtitle }}</p>
                 </div>
                 <div class="heading-date">{{ today }}</div>
             </section>
             <MetricCards
-                v-if="!['settings', 'history', 'watch-detail'].includes(String(route.name))"
+                v-if="['watches', 'alerts'].includes(String(route.name))"
                 :status="state.status"
             /><slot />
             <footer class="page-footer">

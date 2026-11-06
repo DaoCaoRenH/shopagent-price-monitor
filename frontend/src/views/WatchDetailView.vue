@@ -11,6 +11,7 @@ import AppDialog from '../components/common/AppDialog.vue'
 import EmptyState from '../components/common/EmptyState.vue'
 import Notice from '../components/common/Notice.vue'
 import Icon from '../components/common/Icon.vue'
+import PricePosition from '../components/watches/PricePosition.vue'
 const route = useRoute(),
     router = useRouter(),
     id = computed(() => String(route.params.id))
@@ -91,13 +92,16 @@ async function act(kind: 'refresh' | 'toggle' | 'delete' | 'restart' | 'simulate
                             <div class="low-price">
                                 <span class="price-label">已采集最低价</span
                                 ><strong>¥{{ amount(current.low_price) }}</strong>
+                                <PricePosition :watch="current" />
                             </div>
                         </div>
                         <div class="chart-heading">
                             <h3>
                                 价格轨迹 {{ current.mode === 'simulation' ? '· 模拟数据' : '' }}
                             </h3>
-                            <span class="chart-legend">采集最低</span>
+                            <span class="chart-legend"
+                                >采集最低 ¥{{ amount(current.low_price) }}</span
+                            >
                         </div>
                         <div class="watch-chart-wrap">
                             <PriceChart

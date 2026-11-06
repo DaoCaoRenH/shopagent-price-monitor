@@ -47,7 +47,6 @@ watch(
         ><form id="watch-form" @submit.prevent="create">
             <div class="dialog-heading">
                 <div>
-                    <div class="eyebrow">PRODUCT & PRICE WATCH</div>
                     <h2 id="dialog-title">
                         {{ state.phase === 'detail' ? '商品详情' : '设置价格监控' }}
                     </h2>

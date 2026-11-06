@@ -4,7 +4,7 @@
 
 基于 **Vue 3 + TypeScript + FastAPI + SQLite**。安装包包含编译后的页面，运行时只需 Python。支持 OpenAI Responses 和兼容的 Chat Completions 工具调用，默认模型名为 `deepseek-v4.1-flash`，也可以完全使用目录检索与规则建议。
 
-![我的监控：商品规格、当前价格与已采集最低价](docs/images/watch-list.jpg)
+![价格观察台：首页搜索与关注商品预览](docs/images/workspace.jpg)
 
 截图使用虚构演示数据。[查看价格走势与购买建议](docs/images/price-trend-advice.jpg)。
 
@@ -150,7 +150,7 @@ Set-Location ..
 
 修改前端源码需要 Node 22.12+ 或 24+；普通用户运行安装包无需 Node。`npm run dev` 启动前端开发服务器，默认将 `/api` 代理到 `127.0.0.1:8092`，请在另一个终端用 `--port 8092` 启动 Python 后端。正式运行由 FastAPI 同源提供页面与接口。
 
-`npm run build` 会重建 `src/shopagent_monitor/app/static/`，生成文件随源码提交并进入 wheel。不要直接编辑生成文件；代码分层与异步状态约定见 [前端开发说明](docs/frontend-refactor.md)。CI 在 Windows / Ubuntu、Python 3.11 / 3.12 上执行前后端测试、构建一致性和安装包验证；测试使用临时数据库、虚构商品和受控模型响应。
+`npm run build` 会重建 `src/shopagent_monitor/app/static/`，生成文件随源码提交并进入 wheel。不要直接编辑生成文件；代码分层与异步状态约定见 [前端开发说明](docs/frontend-refactor.md)，配色、页面布局和曲线交互见 [界面设计说明](docs/frontend-design.md)。CI 在 Windows / Ubuntu、Python 3.11 / 3.12 上执行前后端测试、构建一致性和安装包验证；测试使用临时数据库、虚构商品和受控模型响应。
 
 准备发布前可运行 `python tools/check_release.py` 检查已加入 Git 的文件，以及 `python -m build` 构建安装包。安装 wheel 后执行 `python tools/verify_install.py`，确认网页和演示数据随包分发。版本与验证记录见 [CHANGELOG.md](CHANGELOG.md)。
 

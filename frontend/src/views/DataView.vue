@@ -73,7 +73,7 @@ async function readFile(event: Event) {
                 <div class="panel-heading"><h2>数据来源与更新</h2></div>
                 <div class="panel-body">
                     <div class="source-block">
-                        <span class="source-number">01</span>
+                        <Icon name="bag" />
                         <h3>商品目录</h3>
                         <p>
                             {{
@@ -92,14 +92,14 @@ async function readFile(event: Event) {
                         >
                     </div>
                     <div class="source-block">
-                        <span class="source-number">02</span>
+                        <Icon name="upload" />
                         <h3>快照监控</h3>
                         <p>
                             以目录报价建立初始基准，后续导入有明确时间的价格快照。静态目录不会自行产生新价格。
                         </p>
                     </div>
                     <div class="source-block">
-                        <span class="source-number">03</span>
+                        <Icon name="activity" />
                         <h3>模拟监控</h3>
                         <p>
                             事件模拟与固定场景用于体验价格变化和低价提醒。模拟报价单独保存，不会进入快照监控的价格历史。
